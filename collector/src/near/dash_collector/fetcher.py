@@ -14,7 +14,6 @@ class Fetcher(object):
             self._node_api_port,
             path,
         )
-        print(url)
         return requests.get(url)
 
     def get_latest_block(self):
