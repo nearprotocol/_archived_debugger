@@ -3,7 +3,7 @@ from flask import (
     jsonify,
 )
 
-from near.collector.test_helpers import client
+from near.dash_collector.test_helpers import client
 
 app = Flask(__name__)
 
