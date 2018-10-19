@@ -1,41 +1,53 @@
-import React, {Component} from 'react';
+import * as moment from 'moment';
+import React from 'react';
+import {Header, Table} from 'semantic-ui-react';
 import io from 'socket.io-client';
-import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
+class App extends React.Component {
   state = {
-    blocks: {}
-  }
+    blocks: [],
+    currentTime: null,
+  };
 
-  registerUpdate(msg) {
-    console.log(msg)
-  }
+  registerUpdate = (msg) => {
+    this.setState({blocks: this.state.blocks.concat([msg])});
+  };
+
+  setCurrentTime = () => {
+    this.setState({currentTime: moment()})
+  };
 
   componentWillMount() {
     const socket = io('http://localhost:5000');
     socket.on('json', this.registerUpdate);
+    window.setInterval(this.setCurrentTime, 1000);
   }
 
   render() {
+    const {blocks, currentTime} = this.state;
+    let secondsSinceLastBlock;
+    if (blocks.length !== 0) {
+      const lastBlock = blocks[blocks.length - 1];
+      const createdAt = moment.unix(lastBlock.value.created_at);
+      secondsSinceLastBlock = currentTime.diff(createdAt, 'seconds') + 's';
+    } else {
+      secondsSinceLastBlock = 'n/a';
+    }
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <Table celled>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>
+              <Header as={'h2'}>
+                Last Block
+              </Header>
+              {secondsSinceLastBlock}
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    )
   }
 }
 
