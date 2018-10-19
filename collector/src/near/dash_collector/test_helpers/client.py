@@ -19,7 +19,9 @@ context = {'latest_block': None}
 
 
 def _needs_new_block(latest_block):
-    time_interval = random.randint(25, 30)
+    average_interval = 6
+    interval_range = 2
+    time_interval = average_interval - (interval_range * random.random())
     return (time.time() - latest_block.created_at) > time_interval
 
 

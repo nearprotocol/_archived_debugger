@@ -21,18 +21,26 @@ class App extends React.Component {
   componentWillMount() {
     const socket = io('http://localhost:5000');
     socket.on('json', this.registerUpdate);
+    this.setCurrentTime();
     window.setInterval(this.setCurrentTime, 1000);
   }
 
   render() {
     const {blocks, currentTime} = this.state;
-    let secondsSinceLastBlock;
+    let secondsSinceLastBlock = 'n/a';
+    let avgBlockTime = 'n/a';
     if (blocks.length !== 0) {
       const lastBlock = blocks[blocks.length - 1];
-      const createdAt = moment.unix(lastBlock.value.created_at);
-      secondsSinceLastBlock = currentTime.diff(createdAt, 'seconds') + 's';
-    } else {
-      secondsSinceLastBlock = 'n/a';
+      const lastBlockCreatedAt = moment.unix(lastBlock.value.created_at);
+      secondsSinceLastBlock = currentTime.diff(
+        lastBlockCreatedAt, 'seconds') + 's';
+    }
+    if (blocks.length > 1) {
+      const firstBlock = blocks[0];
+      const firstBlockCreatedAt = moment.unix(firstBlock.value.created_at);
+      const secondsSinceFirstBlock = currentTime.diff(
+        firstBlockCreatedAt, 'seconds');
+      avgBlockTime = (secondsSinceFirstBlock / blocks.length).toFixed(1) + 's';
     }
     return (
       <Table celled>
@@ -43,6 +51,12 @@ class App extends React.Component {
                 Last Block
               </Header>
               {secondsSinceLastBlock}
+            </Table.Cell>
+            <Table.Cell>
+              <Header as={'h2'}>
+                Avg Block Time
+              </Header>
+              {avgBlockTime}
             </Table.Cell>
           </Table.Row>
         </Table.Body>

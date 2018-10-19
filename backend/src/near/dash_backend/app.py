@@ -1,3 +1,5 @@
+import json
+
 from flask import (
     Flask,
     jsonify,
@@ -14,7 +16,8 @@ socket_io_wrapper = SocketIO(app)
 
 @app.route('/submit-latest-block', methods=['POST'])
 def index():
-    data = request.get_json()
+    # SocketIO seems to break standard the Flask JSON interface
+    data = json.loads(request.data)
     send(data, json=True, broadcast=True, namespace='/')
     return jsonify({'status': 'OK'})
 
