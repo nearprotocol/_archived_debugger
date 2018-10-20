@@ -16,8 +16,8 @@ class Fetcher(object):
         )
         return requests.get(url)
 
-    def get_latest_block(self):
-        return self._get('get-latest-block').json()
+    def get_context(self):
+        return self._get('get-context').json()
 
 
 fetcher = Fetcher()

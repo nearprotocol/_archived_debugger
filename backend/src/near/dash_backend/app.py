@@ -14,7 +14,7 @@ app = Flask(__name__)
 socket_io_wrapper = SocketIO(app)
 
 
-@app.route('/submit-latest-block', methods=['POST'])
+@app.route('/submit-context', methods=['POST'])
 def index():
     # SocketIO seems to break standard the Flask JSON interface
     data = json.loads(request.data)

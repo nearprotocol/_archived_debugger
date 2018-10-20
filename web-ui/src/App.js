@@ -6,12 +6,12 @@ import './App.css';
 
 class App extends React.Component {
   state = {
-    blocks: [],
+    context: null,
     currentTime: null,
   };
 
   registerUpdate = (msg) => {
-    this.setState({blocks: this.state.blocks.concat([msg])});
+    this.setState({context: msg})
   };
 
   setCurrentTime = () => {
@@ -26,39 +26,55 @@ class App extends React.Component {
   }
 
   render() {
-    const {blocks, currentTime} = this.state;
-    let secondsSinceLastBlock = 'n/a';
-    let avgBlockTime = 'n/a';
-    if (blocks.length !== 0) {
-      const lastBlock = blocks[blocks.length - 1];
-      const lastBlockCreatedAt = moment.unix(lastBlock.value.created_at);
-      secondsSinceLastBlock = currentTime.diff(
-        lastBlockCreatedAt, 'seconds') + 's';
-    }
-    if (blocks.length > 1) {
-      const firstBlock = blocks[0];
-      const firstBlockCreatedAt = moment.unix(firstBlock.value.created_at);
-      const secondsSinceFirstBlock = currentTime.diff(
-        firstBlockCreatedAt, 'seconds');
-      avgBlockTime = (secondsSinceFirstBlock / blocks.length).toFixed(1) + 's';
+    const {context, currentTime} = this.state;
+    var tableBody = null;
+    if (context) {
+      const node_info = context.node_info;
+      let secondsSinceLastBlock = 'n/a';
+      if (node_info.latest_block) {
+        const lastBlockCreatedAt = moment.unix(node_info.latest_block.created_at);
+        secondsSinceLastBlock = currentTime.diff(
+          lastBlockCreatedAt, 'seconds') + 's';
+      }
+      tableBody = (
+        <Table.Row>
+          <Table.Cell collapsing>
+            <Header as={'h2'}>
+              Node ID
+            </Header>
+            {node_info.id}
+          </Table.Cell>
+          <Table.Cell collapsing>
+            <Header as={'h2'}>
+              Shard ID
+            </Header>
+            {node_info.shard_id}
+          </Table.Cell>
+          <Table.Cell collapsing>
+            <Header as={'h2'}>
+              Stake
+            </Header>
+            {node_info.stake}
+          </Table.Cell>
+          <Table.Cell collapsing>
+            <Header as={'h2'}>
+              # Peers
+            </Header>
+            {node_info.num_peers}
+          </Table.Cell>
+          <Table.Cell>
+            <Header as={'h2'}>
+              Last Block
+            </Header>
+            {secondsSinceLastBlock}
+          </Table.Cell>
+        </Table.Row>
+      )
     }
     return (
       <Table celled>
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Header as={'h2'}>
-                Last Block
-              </Header>
-              {secondsSinceLastBlock}
-            </Table.Cell>
-            <Table.Cell>
-              <Header as={'h2'}>
-                Avg Block Time
-              </Header>
-              {avgBlockTime}
-            </Table.Cell>
-          </Table.Row>
+          {tableBody}
         </Table.Body>
       </Table>
     )

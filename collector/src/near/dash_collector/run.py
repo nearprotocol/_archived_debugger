@@ -6,13 +6,13 @@ from near.dash_collector.sender import sender
 
 
 def run_collector_loop(interval=500):
-    last_fetch_hash = None
+    latest_context_hash = None
     while True:
-        latest_block = client.fetch_latest_block()
-        fetch_hash = hash(json.dumps(latest_block))
-        if fetch_hash != last_fetch_hash:
-            sender.post_latest_block(latest_block)
-            last_fetch_hash = fetch_hash
+        context = client.fetch_context()
+        context_hash = hash(json.dumps(context))
+        if context_hash != latest_context_hash:
+            sender.post_latest_context(context)
+            latest_context_hash = context_hash
 
         time.sleep(interval / 1000)
 
