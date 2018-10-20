@@ -11,7 +11,8 @@ from near.dash_pylib.models import (
 
 
 def _generate_num_peers():
-    return random.randint(2, 3)
+    num_peers = int(random.normalvariate(15, 2))
+    return min(max(num_peers, 10), 20)
 
 
 def _generate_id():
@@ -36,8 +37,8 @@ def _generate_node_info(shard_id, num_peers=None):
 
 def _generate_ping_success(existing_ping_success=None):
     if existing_ping_success is None:
-        return random.random() > .05
-    elif random.random() > .05:
+        return random.random() > .01
+    elif random.random() < .0001:
         return not existing_ping_success
     else:
         return existing_ping_success
@@ -45,18 +46,20 @@ def _generate_ping_success(existing_ping_success=None):
 
 def _generate_latency(existing_latency=None):
     if existing_latency is None:
-        average_latency = 100
-        latency_range = 25
-        return random.randint(
-            average_latency - latency_range,
-            average_latency + latency_range,
+        latency = int(random.normalvariate(100, 50))
+    elif random.random() < .01:
+        average_difference = 0
+        difference_range = 10
+        variation = random.choice(
+            range(
+                average_difference - difference_range,
+                average_difference + difference_range + 1,
+            ),
         )
+        latency = int(existing_latency + variation)
     else:
-        average_factor = 1
-        factor_range = .2
-        factor = ((average_factor + factor_range / 2)
-                  - (factor_range * random.random()))
-        return int(existing_latency * factor)
+        latency = existing_latency
+    return max(3, latency)
 
 
 def _generate_peer(shard_id):
@@ -100,35 +103,32 @@ class State(object):
     def _update_latest_block_if_needed(self, node_info):
         if (node_info.latest_block is None or
                 node_info.latest_block.id != self._latest_block_data['id']):
-            propagation_time = 10 * random.random()
-            last_created_at = self._latest_block_data['created_at']
-            if (time.time() - last_created_at) > propagation_time:
+            new_block_propagated = bool(random.normalvariate(0, 2))
+            if new_block_propagated:
+                propagated_in = int(max(5, random.normalvariate(500, 200)))
                 block_data = dict(
-                    propagated_in=int(propagation_time * 1000),
+                    propagated_in=propagated_in,
                     **self._latest_block_data,
                 )
                 node_info.latest_block = BlockInfo(block_data)
 
     def _perturb_peer(self, peer):
-        self._update_latest_block_if_needed(peer.node_info)
         peer.ping_success = _generate_ping_success(peer.ping_success)
         if peer.ping_success:
+            self._update_latest_block_if_needed(peer.node_info)
             peer.latency = _generate_latency(peer.latency)
 
     def _needs_new_block(self):
         if self._latest_block_data is None:
             return True
 
-        average_interval = 30
-        interval_range = 5
-        time_interval = ((average_interval + interval_range / 2)
-                         - (interval_range * random.random()))
+        time_interval = random.normalvariate(10, 2)
         last_created_at = self._latest_block_data['created_at']
         return (time.time() - last_created_at) > time_interval
 
     def _create_new_block(self):
         _id = _generate_id()
-        num_txns = random.randint(50, 150)
+        num_txns = max(1, int(random.normalvariate(100, 20)))
         created_at = time.time()
         self._latest_block_data = {
             'id': _id,
