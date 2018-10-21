@@ -104,7 +104,7 @@ class State(object):
         if (node_info.latest_block is None or
                 node_info.latest_block.id != self._latest_block_data['id']):
             new_block_propagated = bool(random.normalvariate(0, 2))
-            if new_block_propagated:
+            if node_info.latest_block is None or new_block_propagated:
                 propagated_in = int(max(5, random.normalvariate(500, 200)))
                 block_data = dict(
                     propagated_in=propagated_in,

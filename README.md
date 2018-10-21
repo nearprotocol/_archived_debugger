@@ -1,2 +1,0 @@
-# dashboard
-NEAR Protocol Dashboard
