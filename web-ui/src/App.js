@@ -1,7 +1,6 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Header, Table } from 'semantic-ui-react';
 import io from 'socket.io-client';
 import './App.css';
 
@@ -47,11 +46,11 @@ class RelativeTimeLabel extends React.Component {
 
 export class PeerTable extends React.Component {
   static propTypes = {
-    peers: PropTypes.object.isRequired,
+    peers: PropTypes.array.isRequired,
   }
 
   render() {
-   return (
+    return (
       <ReactTable
         data={this.props.peers}
         columns={[
@@ -97,7 +96,7 @@ export class PeerTable extends React.Component {
           {
             Header: 'Last Block Time',
             accessor: 'node_info.latest_block.created_at',
-            Cell: row => <RelativeTimeLabel timeStamp={row.value}/>,
+            Cell: row => <RelativeTimeLabel timeStamp={row.value} />,
             maxWidth: 200,
           },
           {
@@ -135,63 +134,19 @@ class App extends React.Component {
 
   render() {
     const { context } = this.state
-    var tableBody = null
-    var peerTable = null
+    var body = null
     if (context) {
-      const node_info = context.node_info
-      let secondsSinceLastBlock = 'n/a'
-      if (node_info.latest_block) {
-        secondsSinceLastBlock = (
-          <RelativeTimeLabel
-            timeStamp={node_info.latest_block.created_at}
-          />
-        )
-      }
-      tableBody = (
-        <Table.Row>
-          <Table.Cell collapsing>
-            <Header as={'h2'}>
-              Node ID
-            </Header>
-            {node_info.id}
-          </Table.Cell>
-          <Table.Cell collapsing>
-            <Header as={'h2'}>
-              Shard ID
-            </Header>
-            {node_info.shard_id}
-          </Table.Cell>
-          <Table.Cell collapsing>
-            <Header as={'h2'}>
-              Stake
-            </Header>
-            {node_info.stake}
-          </Table.Cell>
-          <Table.Cell collapsing>
-            <Header as={'h2'}>
-              # Peers
-            </Header>
-            {node_info.num_peers}
-          </Table.Cell>
-          <Table.Cell>
-            <Header as={'h2'}>
-              Last Block
-            </Header>
-            {secondsSinceLastBlock}
-          </Table.Cell>
-        </Table.Row>
+      body = (
+        <React.Fragment>
+          <PeerTable peers={[{node_info: context.node_info}]} />
+          <PeerTable peers={context.peers} />
+        </React.Fragment>
       )
-      peerTable = <PeerTable peers={context.peers} />
     }
     return (
-      <div>
-        <Table celled>
-          <Table.Body>
-            {tableBody}
-          </Table.Body>
-        </Table>
-        {peerTable}
-      </div>
+      <React.Fragment>
+        {body}
+      </React.Fragment>
     )
   }
 }
