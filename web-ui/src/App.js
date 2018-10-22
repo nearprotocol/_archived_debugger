@@ -1,11 +1,17 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTable from "react-table";
+import {
+  Header,
+  Segment,
+} from 'semantic-ui-react'
 import io from 'socket.io-client';
+
+import "react-table/react-table.css";
+
 import './App.css';
 
-import ReactTable from "react-table";
-import "react-table/react-table.css";
 
 class RelativeTimeLabel extends React.Component {
   static propTypes = {
@@ -120,11 +126,15 @@ export class PeerTable extends React.Component {
 
 class App extends React.Component {
   state = {
-    context: null,
+    observerData: [],
+    peerData: [],
   }
 
   registerUpdate = (msg) => {
-    this.setState({ context: msg })
+    this.setState({
+      observerData: [{ node_info: msg.node_info }],
+      peerData: msg.peers,
+    })
   }
 
   componentWillMount() {
@@ -133,19 +143,16 @@ class App extends React.Component {
   }
 
   render() {
-    const { context } = this.state
-    var body = null
-    if (context) {
-      body = (
-        <React.Fragment>
-          <PeerTable peers={[{node_info: context.node_info}]} />
-          <PeerTable peers={context.peers} />
-        </React.Fragment>
-      )
-    }
     return (
       <React.Fragment>
-        {body}
+        <Segment>
+          <Header>Observer</Header>
+          <PeerTable peers={this.state.observerData} />
+        </Segment>
+        <Segment>
+          <Header>Peers</Header>
+          <PeerTable peers={this.state.peerData} />
+        </Segment>
       </React.Fragment>
     )
   }
