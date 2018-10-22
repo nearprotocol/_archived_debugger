@@ -4,8 +4,8 @@ import uuid
 
 from near.dash_pylib.models import (
     BlockInfo,
-    Context,
     NodeInfo,
+    ObserverData,
     Peer,
 )
 
@@ -91,7 +91,7 @@ def _generate_context():
         peer = _generate_peer(peer_shard_id, is_observer)
         peers.append(peer)
 
-    return Context({
+    return ObserverData({
         'observer_id': peers[0].node_info.id,
         'peers': peers,
     })
@@ -154,7 +154,7 @@ class State(object):
 state = None
 
 
-def get_context():
+def get_observer_data():
     global state
     if state is None:
         state = State()
@@ -164,5 +164,5 @@ def get_context():
 
 if __name__ == '__main__':
     while True:
-        print(get_context())
+        print(get_observer_data())
         time.sleep(1)

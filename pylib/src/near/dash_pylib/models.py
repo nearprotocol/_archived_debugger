@@ -6,13 +6,12 @@ from schematics.types import (
     ListType,
     ModelType,
     StringType,
-    TimestampType,
 )
 
 
 class BlockInfo(Model):
     id = StringType(required=True)
-    created_at = TimestampType(required=True)
+    created_at = FloatType(required=True)
     num_txns = IntType(required=True)
     propagated_in = IntType(required=True)
 
@@ -31,16 +30,6 @@ class Peer(Model):
     latency = IntType()
 
 
-class Context(Model):
+class ObserverData(Model):
     observer_id = StringType(required=True)
     peers = ListType(ModelType(Peer), default=[])
-
-
-class NodeStats(Model):
-    node_id = StringType(required=True)
-    avg_uptime = FloatType()
-    avg_prop_time = FloatType()
-
-
-class GlobalStats(Model):
-    avg_block_time = FloatType()

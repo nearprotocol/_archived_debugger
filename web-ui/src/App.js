@@ -112,9 +112,16 @@ export class PeerTable extends React.Component {
             maxWidth: 200,
           },
           {
-            Header: 'Propagation Time',
+            Header: 'Last Prop Time',
             accessor: 'node_info.latest_block.propagated_in',
-            maxWidth: 200,
+            Cell: row => row.value + 'ms',
+            maxWidth: 160,
+          },
+          {
+            Header: 'Avg Prop Time',
+            accessor: 'stats.avg_prop_time',
+            Cell: row => Math.round(row.value) + 'ms',
+            maxWidth: 160,
           },
         ]}
         defaultSorted={[
@@ -134,17 +141,30 @@ class App extends React.Component {
   state = {
     observerData: [],
     peerData: [],
+    stats: {},
   }
 
   registerUpdate = (msg) => {
-    const observerIndex = msg.peers.findIndex(peer => {
+    const data = msg.observer_data
+    const nodeStats = msg.node_stats.reduce((acc, val) => {
+      acc[val.node_id] = val
+      return acc
+    }, {})
+    const observerIndex = data.peers.findIndex(peer => {
       return (peer.node_info.id === msg.observer_id)
     })
-    const observer = msg.peers.splice(observerIndex, 1)[0]
+    const observer = data.peers.splice(observerIndex, 1)[0]
+    const observerData = [{
+      node_info: observer.node_info,
+      stats: nodeStats[observer.node_info.id],
+    }]
 
+    data.peers.forEach(peer =>
+      peer.stats = nodeStats[peer.node_info.id]
+    )
     this.setState({
-      observerData: [{ node_info: observer.node_info }],
-      peerData: msg.peers,
+      observerData: observerData,
+      peerData: data.peers,
     })
   }
 

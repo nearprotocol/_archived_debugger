@@ -22,8 +22,8 @@ class Sender(object):
             headers={'content-type': 'application/json'},
         )
 
-    def post_latest_context(self, data):
-        response = self._post('submit-context', data)
+    def post_latest_observer_data(self, data):
+        response = self._post('submit-observer-data', data)
         assert response.status_code == 200
         return response.json()
 

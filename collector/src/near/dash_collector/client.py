@@ -1,9 +1,9 @@
 from near.dash_collector.fetcher import fetcher
 
 
-def fetch_context():
-    return fetcher.get_context()
+def fetch_observer_data():
+    return fetcher.get_observer_data()
 
 
 if __name__ == '__main__':
-    print(fetch_context())
+    print(fetch_observer_data())

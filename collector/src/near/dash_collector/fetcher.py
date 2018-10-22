@@ -16,8 +16,8 @@ class Fetcher(object):
         )
         return requests.get(url)
 
-    def get_context(self):
-        return self._get('get-context').json()
+    def get_observer_data(self):
+        return self._get('get-observer-data').json()
 
 
 fetcher = Fetcher()

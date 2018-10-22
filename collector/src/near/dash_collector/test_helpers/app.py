@@ -8,7 +8,7 @@ from near.dash_collector.test_helpers import client
 app = Flask(__name__)
 
 action_fns = {
-    'get-context': client.get_context,
+    'get-observer-data': client.get_observer_data,
 }
 
 
