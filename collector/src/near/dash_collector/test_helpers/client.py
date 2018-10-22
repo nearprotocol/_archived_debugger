@@ -62,12 +62,16 @@ def _generate_latency(existing_latency=None):
     return max(3, latency)
 
 
-def _generate_peer(shard_id):
+def _generate_peer(shard_id, is_observer=False):
     node_info = _generate_node_info(shard_id)
-    ping_success = _generate_ping_success()
     latency = None
-    if ping_success:
-        latency = _generate_latency()
+    if is_observer:
+        ping_success = True
+    else:
+        ping_success = _generate_ping_success()
+        if ping_success:
+            latency = _generate_latency()
+
     return Peer({
         'node_info': node_info,
         'ping_success': ping_success,
@@ -80,17 +84,15 @@ def _generate_context():
     shards = [_generate_id() for _ in range(num_shards)]
 
     num_peers = _generate_num_peers()
-    node_shard_id = random.choice(shards)
-    node_info = _generate_node_info(node_shard_id, num_peers)
-
     peers = []
-    for _ in range(num_peers):
+    for i in range(num_peers):
+        is_observer = (i == 0)
         peer_shard_id = random.choice(shards)
-        peer = _generate_peer(peer_shard_id)
+        peer = _generate_peer(peer_shard_id, is_observer)
         peers.append(peer)
 
     return Context({
-        'node_info': node_info,
+        'observer_id': peers[0].node_info.id,
         'peers': peers,
     })
 
@@ -113,10 +115,13 @@ class State(object):
                 node_info.latest_block = BlockInfo(block_data)
 
     def _perturb_peer(self, peer):
-        peer.ping_success = _generate_ping_success(peer.ping_success)
+        if peer.node_info.id != self.context.observer_id:
+            peer.ping_success = _generate_ping_success(peer.ping_success)
+
         if peer.ping_success:
             self._update_latest_block_if_needed(peer.node_info)
-            peer.latency = _generate_latency(peer.latency)
+            if peer.node_info.id != self.context.observer_id:
+                peer.latency = _generate_latency(peer.latency)
 
     def _needs_new_block(self):
         if self._latest_block_data is None:
@@ -142,7 +147,6 @@ class State(object):
         if self._needs_new_block():
             self._create_new_block()
 
-        self._update_latest_block_if_needed(self.context.node_info)
         for peer in self.context.peers:
             self._perturb_peer(peer)
 

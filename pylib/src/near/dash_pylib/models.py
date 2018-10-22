@@ -32,9 +32,8 @@ class Peer(Model):
 
 
 class Context(Model):
-    node_info = ModelType(NodeInfo, required=True)
+    observer_id = StringType(required=True)
     peers = ListType(ModelType(Peer), default=[])
-    latest_block = ModelType(BlockInfo)
 
 
 class NodeStats(Model):

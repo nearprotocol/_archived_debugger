@@ -53,9 +53,14 @@ class RelativeTimeLabel extends React.Component {
 export class PeerTable extends React.Component {
   static propTypes = {
     peers: PropTypes.array.isRequired,
+    nullLatencyString: PropTypes.string,
   }
 
   render() {
+    var { nullLatencyString } = this.props
+    if (!nullLatencyString) {
+      nullLatencyString = 'offline'
+    }
     return (
       <ReactTable
         data={this.props.peers}
@@ -75,7 +80,8 @@ export class PeerTable extends React.Component {
             Header: 'Latency',
             id: 'latency',
             accessor: row => (row.ping_success && row.latency) || Infinity,
-            Cell: row => row.value !== Infinity ? row.value + 'ms' : 'offline',
+            Cell: row => row.value !== Infinity
+              ? row.value + 'ms' : nullLatencyString,
             maxWidth: 75,
           },
           {
@@ -131,8 +137,13 @@ class App extends React.Component {
   }
 
   registerUpdate = (msg) => {
+    const observerIndex = msg.peers.findIndex(peer => {
+      return (peer.node_info.id === msg.observer_id)
+    })
+    const observer = msg.peers.splice(observerIndex, 1)[0]
+
     this.setState({
-      observerData: [{ node_info: msg.node_info }],
+      observerData: [{ node_info: observer.node_info }],
       peerData: msg.peers,
     })
   }
@@ -147,11 +158,16 @@ class App extends React.Component {
       <React.Fragment>
         <Segment>
           <Header>Observer</Header>
-          <PeerTable peers={this.state.observerData} />
+          <PeerTable
+            peers={this.state.observerData}
+            nullLatencyString='n/a'
+          />
         </Segment>
         <Segment>
           <Header>Peers</Header>
-          <PeerTable peers={this.state.peerData} />
+          <PeerTable
+            peers={this.state.peerData}
+          />
         </Segment>
       </React.Fragment>
     )
