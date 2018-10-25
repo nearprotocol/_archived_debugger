@@ -28,6 +28,7 @@ def index():
         'observer_data': observer_data,
         'node_stats': stats,
     })
+    print('here')
     send(
         dashboard_data.to_primitive(),
         json=True,
@@ -37,10 +38,6 @@ def index():
     return jsonify({'status': 'OK'})
 
 
-@app.before_first_request
-def configure_service():
-    service.configure()
-
-
 if __name__ == '__main__':
+    service.configure()
     socket_io_wrapper.run(app, debug=True)
