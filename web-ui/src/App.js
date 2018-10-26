@@ -169,7 +169,7 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    const socket = io('http://localhost:5000')
+    const socket = io('http://localhost:3000')
     socket.on('json', this.registerUpdate)
   }
 

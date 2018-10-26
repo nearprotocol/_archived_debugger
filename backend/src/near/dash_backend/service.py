@@ -13,7 +13,7 @@ class Service(object):
             if redis_client is None:
                 redis_host = os.environ.get(
                     'NEAR_COLLECTOR_SERVER_REDIS_HOST',
-                    '0.0.0.0',
+                    'localhost',
                 )
                 redis_client = redis.StrictRedis(host=redis_host)
                 redis_client.ping()

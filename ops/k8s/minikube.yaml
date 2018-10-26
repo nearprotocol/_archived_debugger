@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: server-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # https://github.com/kubernetes/ingress-nginx/issues/1567
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /dashboard-server/
+        backend:
+          serviceName: dashboard-server
+          servicePort: 5000
