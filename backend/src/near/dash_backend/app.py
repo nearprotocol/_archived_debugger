@@ -28,7 +28,6 @@ def index():
         'observer_data': observer_data,
         'node_stats': stats,
     })
-    print('here')
     send(
         dashboard_data.to_primitive(),
         json=True,
