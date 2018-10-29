@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: server-ingress
+  name: {{ prefix }}-dash-server
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     # https://github.com/kubernetes/ingress-nginx/issues/1567
@@ -12,5 +12,5 @@ spec:
       paths:
       - path: /dashboard-server/
         backend:
-          serviceName: dashboard-server
+          serviceName: {{ prefix }}-dash-server
           servicePort: 5000

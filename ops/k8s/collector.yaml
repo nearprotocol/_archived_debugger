@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: dashboard-collector
+  name: {{ prefix }}-dash-collector
 spec:
   replicas: 1
   selector:
-    app: dashboard-collector
+    app: {{ prefix }}-dash-collector
   template:
     metadata:
       labels:
-        app: dashboard-collector
+        app: {{ prefix }}-dash-collector
     spec:
       containers:
-      - name: dashboard-collector
+      - name: {{ prefix }}-dash-collector
         image: localhost:5000/near/dash-collector
         env:
         - name: NEAR_COLLECTOR_NODE_API_HOST
@@ -20,6 +20,6 @@ spec:
         - name: NEAR_COLLECTOR_NODE_API_PORT
           value: "5000"
         - name: NEAR_COLLECTOR_SERVER_API_HOST
-          value: dashboard-server
+          value: {{ prefix }}-dash-server
         - name: NEAR_COLLECTOR_SERVER_API_PORT
           value: "5000"
