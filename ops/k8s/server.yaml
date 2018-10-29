@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: {{ prefix }}-dash-server
-        image: localhost:5000/near/dash-server
+        image: 645604410339.dkr.ecr.us-west-2.amazonaws.com/nearprotocol/dash-server
         ports:
         - containerPort: 5000
         env:

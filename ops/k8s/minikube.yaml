@@ -14,3 +14,7 @@ spec:
         backend:
           serviceName: {{ prefix }}-dash-server
           servicePort: 5000
+      - path: /webui/
+        backend:
+          serviceName: {{ prefix }}-dash-webui
+          servicePort: 80

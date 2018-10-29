@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: {{ prefix }}-dash-collector
-        image: localhost:5000/near/dash-collector
+        image: 645604410339.dkr.ecr.us-west-2.amazonaws.com/nearprotocol/dash-collector
         env:
         - name: NEAR_COLLECTOR_NODE_API_HOST
           value: observer

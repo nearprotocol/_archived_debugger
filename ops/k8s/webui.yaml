@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+    name: {{ prefix }}-dash-webui
+spec:
+  replicas: 1
+  selector:
+    app: {{ prefix }}-dash-webui
+  template:
+    metadata:
+      labels:
+        app: {{ prefix }}-dash-webui
+    spec:
+      containers:
+      - name: {{ prefix }}-dash-webui
+        image: 645604410339.dkr.ecr.us-west-2.amazonaws.com/nearprotocol/dash-webui
+        ports:
+        - containerPort: 80
