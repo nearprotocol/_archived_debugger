@@ -27,6 +27,8 @@ def process_avg_prop_time(context):
     for peer_id, block_id in zip(peer_ids, last_block_ids):
         peer = peers[peer_id]
         latest_block = peer.latest_block
+        if latest_block is None:
+            continue
         if block_id is None or block_id.decode('utf-8') != latest_block.id:
             last_block_id_key = _get_last_block_id_key(
                 observer_id,
