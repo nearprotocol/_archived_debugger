@@ -1,41 +1,43 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-    name: {{ prefix }}-dash-server
+  name: dash-server
+  namespace: {{ namespace }}
 spec:
   replicas: 1
   selector:
-    app: {{ prefix }}-dash-server
+    app: dash-server
   template:
     metadata:
       labels:
-        app: {{ prefix }}-dash-server
+        app: dash-server
     spec:
       containers:
-      - name: {{ prefix }}-dash-server
+      - name: dash-server
         image: 645604410339.dkr.ecr.us-west-2.amazonaws.com/nearprotocol/dash-server
         ports:
         - containerPort: 5000
         env:
         - name: NEAR_COLLECTOR_SERVER_REDIS_HOST
-          value: {{ prefix }}-dash-redis
+          value: dash-redis
 
 ---
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: {{ prefix }}-dash-redis
+  name: dash-redis
+  namespace: {{ namespace }}
 spec:
   replicas: 1
   selector:
-    app: {{ prefix }}-dash-redis
+    app: dash-redis
   template:
     metadata:
       labels:
-        app: {{ prefix }}-dash-redis
+        app: dash-redis
     spec:
       containers:
-      - name: {{ prefix }}-dash-redis
+      - name: dash-redis
         image: redis:5.0.0-alpine
         ports:
         - containerPort: 6379
@@ -44,7 +46,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ prefix }}-dash-server
+  name: dash-server
+  namespace: {{ namespace }}
 spec:
   clusterIP: None
   ports:
@@ -52,13 +55,14 @@ spec:
     targetPort: 5000
     protocol: TCP
   selector:
-    app: {{ prefix }}-dash-server
+    app: dash-server
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ prefix }}-dash-redis
+  name: dash-redis
+  namespace: {{ namespace }}
 spec:
   clusterIP: None
   ports:
@@ -66,5 +70,5 @@ spec:
     targetPort: 6379
     protocol: TCP
   selector:
-    app: {{ prefix }}-dash-redis
+    app: dash-redis
 

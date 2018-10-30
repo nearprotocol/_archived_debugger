@@ -1,18 +1,19 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: {{ prefix }}-dash-collector
+  name: dash-collector
+  namespace: {{ namespace }}
 spec:
   replicas: 1
   selector:
-    app: {{ prefix }}-dash-collector
+    app: dash-collector
   template:
     metadata:
       labels:
-        app: {{ prefix }}-dash-collector
+        app: dash-collector
     spec:
       containers:
-      - name: {{ prefix }}-dash-collector
+      - name: dash-collector
         image: 645604410339.dkr.ecr.us-west-2.amazonaws.com/nearprotocol/dash-collector
         env:
         - name: NEAR_COLLECTOR_NODE_API_HOST
@@ -20,6 +21,6 @@ spec:
         - name: NEAR_COLLECTOR_NODE_API_PORT
           value: "5000"
         - name: NEAR_COLLECTOR_SERVER_API_HOST
-          value: {{ prefix }}-dash-server
+          value: dash-server
         - name: NEAR_COLLECTOR_SERVER_API_PORT
           value: "5000"
