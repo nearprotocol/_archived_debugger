@@ -169,14 +169,12 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    var api_url
+    var socket
     if (window.location.hostname === 'localhost') {
-      api_url = 'http://localhost:5000'
+      socket = io('localhost:5000')
     } else {
-      var hostname = window.location.hostname.replace('dashboard', 'dashboard-server')
-      api_url = window.location.protocol + '//' + hostname
+      socket = io(window.location.origin, {path: '/dashboard-server/socket.io'})
     }
-    const socket = io(api_url)
     socket.on('json', this.registerUpdate)
   }
 
