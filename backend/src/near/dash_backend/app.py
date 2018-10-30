@@ -18,6 +18,15 @@ from near.dash_pylib.models import ObserverData
 app = Flask(__name__)
 socket_io_wrapper = SocketIO(app)
 
+last_submitted_data = None
+
+
+@socket_io_wrapper.on('connect')
+def connect():
+    global last_submitted_data
+    if last_submitted_data is not None:
+        send(last_submitted_data, json=True)
+
 
 @app.route('/submit-observer-data', methods=['POST'])
 def index():
@@ -28,6 +37,8 @@ def index():
         'observer_data': observer_data,
         'node_stats': stats,
     })
+    global last_submitted_data
+    last_submitted_data = dashboard_data.to_primitive()
     send(
         dashboard_data.to_primitive(),
         json=True,
