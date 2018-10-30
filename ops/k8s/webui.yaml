@@ -19,3 +19,18 @@ spec:
         - containerPort: 80
       imagePullSecrets:
       - name: awsecr-cred
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dash-webui
+  namespace: {{ namespace }}
+spec:
+  clusterIP: None
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: dash-webui
