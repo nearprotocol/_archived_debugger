@@ -1,7 +1,7 @@
 from statistics import mean
 
-from near.dash_backend.models import NodeStats
-from near.dash_backend.service import service
+from near.dash_server.models import NodeStats
+from near.dash_server.service import service
 
 
 def _get_last_block_id_key(observer_id, peer_id):

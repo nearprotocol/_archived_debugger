@@ -10,10 +10,10 @@ from flask_socketio import (
     SocketIO,
 )
 
-from near.dash_backend import db
-from near.dash_backend.models import DashboardData
-from near.dash_backend.service import service
 from near.dash_pylib.models import ObserverData
+from near.dash_server import db
+from near.dash_server.models import DashboardData
+from near.dash_server.service import service
 
 app = Flask(__name__)
 socket_io_wrapper = SocketIO(app)

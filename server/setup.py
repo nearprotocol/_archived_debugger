@@ -4,7 +4,7 @@ from setuptools import (
 )
 
 setup(
-    name='near.dash_backend',
+    name='near.dash_server',
     version='0.0.0',
     packages=find_packages('src'),
     package_dir={'': 'src'},

@@ -9,8 +9,8 @@ COPY /pylib /app/pylib
 WORKDIR /app/pylib
 RUN python setup.py install
 
-COPY /backend /app/backend
-WORKDIR /app/backend
+COPY /server /app/server
+WORKDIR /app/server
 RUN python setup.py install
 
-CMD ["python", "-m", "near.dash_backend.run"]
+CMD ["python", "-m", "near.dash_server.run"]

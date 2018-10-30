@@ -1,10 +1,10 @@
 from gevent.monkey import patch_all
 
-from near.dash_backend.app import (
+from near.dash_server.app import (
     app,
     socket_io_wrapper,
 )
-from near.dash_backend.service import service
+from near.dash_server.service import service
 
 if __name__ == '__main__':
     patch_all()

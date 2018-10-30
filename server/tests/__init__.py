@@ -1,6 +1,6 @@
 import fakeredis
 
-from near.dash_backend.service import service
+from near.dash_server.service import service
 
 
 def setup():
