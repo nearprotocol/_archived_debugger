@@ -24,3 +24,5 @@ spec:
           value: dash-server
         - name: NEAR_COLLECTOR_SERVER_API_PORT
           value: "5000"
+      imagePullSecrets:
+        - name: awsecr-cred

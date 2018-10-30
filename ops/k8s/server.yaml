@@ -20,6 +20,8 @@ spec:
         env:
         - name: NEAR_COLLECTOR_SERVER_REDIS_HOST
           value: dash-redis
+      imagePullSecrets:
+      - name: awsecr-cred
 
 ---
 apiVersion: v1

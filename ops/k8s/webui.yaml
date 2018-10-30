@@ -17,3 +17,5 @@ spec:
         image: 645604410339.dkr.ecr.us-west-2.amazonaws.com/nearprotocol/dash-webui
         ports:
         - containerPort: 80
+      imagePullSecrets:
+      - name: awsecr-cred
