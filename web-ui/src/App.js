@@ -172,6 +172,9 @@ class App extends React.Component {
     var socket
     if (window.location.hostname === 'localhost') {
       socket = io('localhost:5000')
+    } else if (window.location.hostname.startsWith('dash-webui')) {
+      var origin = window.location.origin.replace('dash-webui', 'dash-server')
+      socket = io(origin)
     } else {
       socket = io(window.location.origin, {path: '/dashboard-server/socket.io'})
     }
