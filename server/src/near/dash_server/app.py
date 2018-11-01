@@ -9,6 +9,7 @@ from flask_socketio import (
     send,
     SocketIO,
 )
+from flask_sockets import Sockets
 
 from near.dash_pylib.models import ObserverData
 from near.dash_server import db
@@ -16,6 +17,7 @@ from near.dash_server.models import DashboardData
 from near.dash_server.service import service
 
 app = Flask(__name__)
+sockets = Sockets(app)
 socket_io_wrapper = SocketIO(app)
 
 last_submitted_data = None
@@ -26,6 +28,12 @@ def connect():
     global last_submitted_data
     if last_submitted_data is not None:
         send(last_submitted_data, json=True)
+
+
+@sockets.route('/sockets')
+def handle_message(ws):
+    while True:
+        ws.receive()
 
 
 @app.route('/submit-observer-data', methods=['POST'])

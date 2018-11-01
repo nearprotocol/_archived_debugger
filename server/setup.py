@@ -11,6 +11,7 @@ setup(
     install_requires=[
         'flask==1.0.2',
         'Flask-SocketIO==3.0.2',
+        'flask-sockets==0.2.1',
         'gevent==1.3.7',
         'gevent-websocket==0.10.1',
         'redis==2.10.6',
