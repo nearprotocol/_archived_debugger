@@ -52,82 +52,35 @@ class RelativeTimeLabel extends React.Component {
 
 export class PeerTable extends React.Component {
   static propTypes = {
-    peers: PropTypes.array.isRequired,
-    nullLatencyString: PropTypes.string,
+    peers: PropTypes.object.isRequired,
   }
 
   render() {
-    var { nullLatencyString } = this.props
-    if (!nullLatencyString) {
-      nullLatencyString = 'offline'
-    }
     return (
       <ReactTable
-        data={this.props.peers}
+        data={Object.values(this.props.peers)}
         columns={[
           {
-            Header: 'Node ID',
-            accessor: 'node_info.id',
+            Header: 'Name',
+            accessor: 'name',
             sortable: false,
             maxWidth: 290,
           },
           {
-            Header: 'Shard ID',
-            accessor: 'node_info.shard_id',
-            maxWidth: 290,
-          },
-          {
-            Header: 'Latency',
-            id: 'latency',
-            accessor: row => (row.ping_success && row.latency) || Infinity,
-            Cell: row => row.value !== Infinity
-              ? row.value + 'ms' : nullLatencyString,
-            maxWidth: 75,
-          },
-          {
-            Header: 'Stake',
-            accessor: 'node_info.stake',
-            Cell: row => row.value.toFixed(5),
-            maxWidth: 80,
-          },
-          {
             Header: 'Peers',
-            accessor: 'node_info.num_peers',
+            accessor: 'peer_count',
             maxWidth: 60,
           },
           {
-            Header: 'Last Block ID',
-            accessor: 'node_info.latest_block.id',
-            maxWidth: 290,
+            Header: 'Block',
+            accessor: 'block_height',
+            maxWidth: 150,
           },
           {
-            Header: 'Block Txns',
-            accessor: 'node_info.latest_block.num_txns',
-            maxWidth: 100,
+            Header: 'Block Hash',
+            accessor: 'block_hash',
+            maxWidth: 150,
           },
-          {
-            Header: 'Last Block Time',
-            accessor: 'node_info.latest_block.created_at',
-            Cell: row => <RelativeTimeLabel timeStamp={row.value} />,
-            maxWidth: 200,
-          },
-          {
-            Header: 'Last Prop Time',
-            accessor: 'node_info.latest_block.propagated_in',
-            Cell: row => row.value + 'ms',
-            maxWidth: 160,
-          },
-          {
-            Header: 'Avg Prop Time',
-            accessor: 'stats.avg_prop_time',
-            Cell: row => Math.round(row.value) + 'ms',
-            maxWidth: 160,
-          },
-        ]}
-        defaultSorted={[
-          {
-            id: "latency",
-          }
         ]}
         showPagination={false}
         className='-striped -highlight'
@@ -139,33 +92,13 @@ export class PeerTable extends React.Component {
 
 class App extends React.Component {
   state = {
-    observerData: [],
-    peerData: [],
-    stats: {},
+    peers: {},
   }
 
-  registerUpdate = (msg) => {
-    const data = msg.observer_data
-    const nodeStats = msg.node_stats.reduce((acc, val) => {
-      acc[val.node_id] = val
-      return acc
-    }, {})
-    const observerIndex = data.peers.findIndex(peer => {
-      return (peer.node_info.id === msg.observer_id)
-    })
-    const observer = data.peers.splice(observerIndex, 1)[0]
-    const observerData = [{
-      node_info: observer.node_info,
-      stats: nodeStats[observer.node_info.id],
-    }]
-
-    data.peers.forEach(peer =>
-      peer.stats = nodeStats[peer.node_info.id]
-    )
-    this.setState({
-      observerData: observerData,
-      peerData: data.peers,
-    })
+  registerUpdate = (context) => {
+    const peers = this.state.peers
+    const update = Object.assign(context, peers)
+    this.setState({ peers:  update })
   }
 
   componentWillMount() {
@@ -185,16 +118,9 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <Segment>
-          <Header>Observer</Header>
+          <Header>Nodes</Header>
           <PeerTable
-            peers={this.state.observerData}
-            nullLatencyString='n/a'
-          />
-        </Segment>
-        <Segment>
-          <Header>Peers</Header>
-          <PeerTable
-            peers={this.state.peerData}
+            peers={this.state.peers}
           />
         </Segment>
       </React.Fragment>

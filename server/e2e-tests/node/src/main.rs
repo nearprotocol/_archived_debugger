@@ -55,7 +55,7 @@ impl SystemIntervalMessage {
             cpu: 155.15152,
             height: 126,
             memory: 79284,
-            peers: 0,
+            peers: 1,
             status: String::from("Idle"),
             txcount: 0,
         }
@@ -91,7 +91,7 @@ fn main() {
     for i in 0..1000 {
         thread::sleep(time::Duration::from_secs(1));
         let interval_msg = SystemIntervalMessage::generate();
-        telemetry!("stats.interval"; interval_msg);
+        telemetry!("system.interval"; interval_msg);
         if (i + 1) % 4 == 0 {
             thread::sleep(time::Duration::from_millis(200));
             let block_import_msg = BlockImportMessage::generate();
