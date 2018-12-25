@@ -11,9 +11,8 @@ from flask_socketio import (
 )
 from flask_sockets import Sockets
 
-from near.dash_pylib.models import ObserverData
 from near.dash_server import db
-from near.dash_server.models import DashboardData, NodeInfo
+from near.dash_server.models import DashboardData, NodeInfo, ObserverData
 from near.dash_server.service import service
 
 app = Flask(__name__)
