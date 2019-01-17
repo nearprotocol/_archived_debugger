@@ -104,6 +104,32 @@ class Transaction extends React.Component {
       </React.Fragment>
     )
   }
+  
+  getRowsForFunctionCall(body) {
+    return (
+      <React.Fragment>
+        <Table.Row>
+          <Table.Cell collapsing>Contract ID</Table.Cell>
+          <Table.Cell>{body.contract_id}</Table.Cell>
+        </Table.Row>
+        {/*
+        TODO (#21): add once encoding is fixed 
+        <Table.Row>
+          <Table.Cell collapsing>Method Name</Table.Cell>
+          <Table.Cell>{body.method_name}</Table.Cell>
+        </Table.Row> 
+        <Table.Row>
+          <Table.Cell collapsing>Args</Table.Cell>
+          <Table.Cell>{body.args}</Table.Cell>
+        </Table.Row> 
+        */}
+        <Table.Row>
+          <Table.Cell collapsing>Amount</Table.Cell>
+          <Table.Cell>{body.amount}</Table.Cell>
+        </Table.Row>
+      </React.Fragment>
+    )
+  }
 
   getTypeSpecificRows = (type, body) => {
     if (type === 'SendMoney') {
@@ -116,7 +142,9 @@ class Transaction extends React.Component {
       return this.getRowsForSwapKey(body)
     } else if (type === 'DeployContract') {
       return this.getRowsForDeployContract(body)
-    }else {
+    } else if (type === 'FunctionCall') {
+      return this.getRowsForFunctionCall(body)
+    } else {
       this.props.history.push({
         pathname: `/error`,
       })

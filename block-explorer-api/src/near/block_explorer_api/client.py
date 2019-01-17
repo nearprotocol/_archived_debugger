@@ -10,7 +10,7 @@ from near.block_explorer_api.models import (
     StakeTransaction,
     Transaction,
     TransactionInfo,
-    SwapKeyTransaction, DeployContractTransaction)
+    SwapKeyTransaction, DeployContractTransaction, FunctionCallTransaction)
 
 
 def list_blocks(start=None, limit=None):
@@ -60,6 +60,14 @@ def _get_transaction(data):
             'contract_id': transaction_body['contract_id'],
             # TODO (#21): add once encoding is fixed
             'public_key': '',
+        })
+    elif transaction_type == 'FunctionCall':
+        body = FunctionCallTransaction({
+            'contract_id': transaction_body['contract_id'],
+            'amount': transaction_body['amount'],
+            # TODO (#21): add once encoding is fixed
+            'method_name': '',
+            'args': '',
         })
     else:
         raise Exception("unhandled exception type: {}".format(transaction_type))

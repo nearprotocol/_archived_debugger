@@ -5,7 +5,7 @@ from schematics.types import (
     ModelType,
     StringType,
     UnionType,
-)
+    BaseType)
 
 
 class BlockOverview(Model):
@@ -42,6 +42,13 @@ class DeployContractTransaction(Model):
     public_key = StringType(required=True)
 
 
+class FunctionCallTransaction(Model):
+    contract_id = StringType(required=True)
+    method_name = StringType(required=True)
+    args = BaseType(required=True)
+    amount = IntType(required=True)
+
+
 class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
@@ -50,6 +57,7 @@ class Transaction(Model):
         (
             ModelType(CreateAccountTransaction),
             ModelType(DeployContractTransaction),
+            ModelType(FunctionCallTransaction),
             ModelType(SendMoneyTransaction),
             ModelType(StakeTransaction),
             ModelType(SwapKeyTransaction),
