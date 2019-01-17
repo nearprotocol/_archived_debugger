@@ -10,7 +10,7 @@ from near.block_explorer_api.models import (
     StakeTransaction,
     Transaction,
     TransactionInfo,
-)
+    SwapKeyTransaction)
 
 
 def list_blocks(start=None, limit=None):
@@ -46,7 +46,14 @@ def _get_transaction(data):
         body = CreateAccountTransaction({
             'new_account_id': transaction_body['new_account_id'],
             'amount': transaction_body['amount'],
+            # TODO (#21): add once encoding is fixed
             'public_key': '',
+        })
+    elif transaction_type == 'SwapKey':
+        body = SwapKeyTransaction({
+            # TODO (#21): add once encoding is fixed
+            'current_key': '',
+            'new_key': '',
         })
     else:
         raise Exception("unhandled exception type: {}".format(transaction_type))
@@ -55,7 +62,7 @@ def _get_transaction(data):
         'hash': data['hash'],
         'type': transaction_type,
         'originator': transaction_body['originator'],
-        'body': body.to_primitive(),
+        'body': body,
     })
 
 

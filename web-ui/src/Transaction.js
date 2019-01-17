@@ -8,6 +8,7 @@ import {
   Header,
   Segment,
   Table,
+  Tab,
 } from 'semantic-ui-react';
 
 import { getTransactionInfo } from './api'
@@ -59,12 +60,30 @@ class Transaction extends React.Component {
           <Table.Cell>{body.new_account_id}</Table.Cell>
         </Table.Row>
         {/*
-        TODO (#21): add once b58 encoding is fixed 
+        TODO (#21): add once encoding is fixed 
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
         </Table.Row> 
         */}
+      </React.Fragment>
+    )
+  }
+
+  getRowsForSwapKey(body) {
+    return (
+      <React.Fragment>
+      {/*
+      TODO (#21): add once encoding is fixed
+        <Table.Row>
+          <Table.Cell collapsing>Current Key</Table.Cell>
+          <Table.Cell>{body.current_key}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell collapsing>Previous Key</Table.Cell>
+          <Table.Cell>{body.previous_key}</Table.Cell>
+        </Table.Row>
+      */}
       </React.Fragment>
     )
   }
@@ -76,6 +95,8 @@ class Transaction extends React.Component {
       return this.getRowsForStake(body)
     } else if (type === 'CreateAccount') {
       return this.getRowsForCreateAccount(body)
+    } else if (type === 'SwapKey') {
+      return this.getRowsForSwapKey(body)
     } else {
       this.props.history.push({
         pathname: `/error`,

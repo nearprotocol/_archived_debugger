@@ -32,6 +32,11 @@ class StakeTransaction(Model):
     amount = IntType(required=True)
 
 
+class SwapKeyTransaction(Model):
+    current_key = StringType(required=True)
+    new_key = StringType(required=True)
+
+
 class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
@@ -41,6 +46,7 @@ class Transaction(Model):
             ModelType(CreateAccountTransaction),
             ModelType(SendMoneyTransaction),
             ModelType(StakeTransaction),
+            ModelType(SwapKeyTransaction),
         ),
         required=True,
     )

@@ -29,21 +29,9 @@ class AppHeader extends React.Component {
   }
 
   render() {
-    var back_button = null
-    if (!["/"].includes(this.props.location.pathname)) {
-      back_button = (
-        <Icon
-          link
-          name="reply"
-          className="App-back-button"
-          onClick={this.goBack}
-        />
-      )
-    }
     return (
       <div>
         <header className="App-header">
-          {back_button}
           Block Debugger
         </header>
       </div>
