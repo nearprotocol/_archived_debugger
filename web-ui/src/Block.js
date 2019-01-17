@@ -81,7 +81,7 @@ export class TransactionsTable extends React.Component {
           {
             Header: 'Type',
             accessor: 'type',
-            maxWidth: 100,
+            maxWidth: 160,
           },
         ]}
         className='-striped -highlight'

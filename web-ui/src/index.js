@@ -6,7 +6,6 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
 
 import './index.css'
 import { AppWithRouter } from './App';

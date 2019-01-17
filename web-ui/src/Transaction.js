@@ -8,7 +8,6 @@ import {
   Header,
   Segment,
   Table,
-  Tab,
 } from 'semantic-ui-react';
 
 import { getTransactionInfo } from './api'
@@ -70,6 +69,24 @@ class Transaction extends React.Component {
     )
   }
 
+  getRowsForDeployContract(body) {
+    return (
+      <React.Fragment>
+        <Table.Row>
+          <Table.Cell collapsing>Contract ID</Table.Cell>
+          <Table.Cell>{body.contract_id}</Table.Cell>
+        </Table.Row>
+        {/*
+        TODO (#21): add once encoding is fixed 
+        <Table.Row>
+          <Table.Cell collapsing>Public Key</Table.Cell>
+          <Table.Cell>{body.public_key}</Table.Cell>
+        </Table.Row> 
+        */}
+      </React.Fragment>
+    )
+  }
+
   getRowsForSwapKey(body) {
     return (
       <React.Fragment>
@@ -97,7 +114,9 @@ class Transaction extends React.Component {
       return this.getRowsForCreateAccount(body)
     } else if (type === 'SwapKey') {
       return this.getRowsForSwapKey(body)
-    } else {
+    } else if (type === 'DeployContract') {
+      return this.getRowsForDeployContract(body)
+    }else {
       this.props.history.push({
         pathname: `/error`,
       })

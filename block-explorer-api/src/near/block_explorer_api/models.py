@@ -37,6 +37,11 @@ class SwapKeyTransaction(Model):
     new_key = StringType(required=True)
 
 
+class DeployContractTransaction(Model):
+    contract_id = StringType(required=True)
+    public_key = StringType(required=True)
+
+
 class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
@@ -44,6 +49,7 @@ class Transaction(Model):
     body = UnionType(
         (
             ModelType(CreateAccountTransaction),
+            ModelType(DeployContractTransaction),
             ModelType(SendMoneyTransaction),
             ModelType(StakeTransaction),
             ModelType(SwapKeyTransaction),

@@ -10,7 +10,7 @@ from near.block_explorer_api.models import (
     StakeTransaction,
     Transaction,
     TransactionInfo,
-    SwapKeyTransaction)
+    SwapKeyTransaction, DeployContractTransaction)
 
 
 def list_blocks(start=None, limit=None):
@@ -54,6 +54,12 @@ def _get_transaction(data):
             # TODO (#21): add once encoding is fixed
             'current_key': '',
             'new_key': '',
+        })
+    elif transaction_type == 'DeployContract':
+        body = DeployContractTransaction({
+            'contract_id': transaction_body['contract_id'],
+            # TODO (#21): add once encoding is fixed
+            'public_key': '',
         })
     else:
         raise Exception("unhandled exception type: {}".format(transaction_type))
