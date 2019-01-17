@@ -25,15 +25,36 @@ def list_blocks(start=None, limit=None):
     return output
 
 
+def _get_transaction(data):
+    body = data['body']
+    transaction_type = list(body.keys())[0]
+    transaction_body = body[transaction_type]
+    if transaction_type == 'SendMoney':
+        body = SendMoneyTransaction({
+            'originator': transaction_body['originator'],
+            'receiver': transaction_body['receiver'],
+            'amount': transaction_body['amount'],
+        })
+    else:
+        raise Exception('unhandled exception type')
+
+    return Transaction({
+        'hash': data['hash'],
+        'type': transaction_type,
+        'body': body,
+    })
+
+
 def _get_block_from_response(block):
     parent_hash = block['body']['header']['parent_hash']
     if parent_hash == '11111111111111111111111111111111':
         parent_hash = None
 
+    transactions = [_get_transaction(t) for t in block['body']['transactions']]
     return Block({
         'height': block['body']['header']['index'],
         'hash': block['hash'],
-        'num_transactions': len(block['body']['transactions']),
+        'transactions': transactions,
         'parent_hash': parent_hash,
     })
 
@@ -70,20 +91,4 @@ def get_transaction_by_hash(transaction_hash):
     response = requests.post(url, json=params)
     assert response.status_code == 200, response.status_code
     data = response.json()
-    body = data['transaction']['SignedTransaction']['body']
-    transaction_type = list(body.keys())[0]
-    transaction_body = body[transaction_type]
-    if transaction_type == 'SendMoney':
-        body = SendMoneyTransaction({
-            'originator': transaction_body['originator'],
-            'receiver': transaction_body['receiver'],
-            'amount': transaction_body['amount'],
-        })
-    else:
-        raise Exception('unhandled exception type')
-
-    return Transaction({
-        'hash': transaction_hash,
-        'type': transaction_type,
-        'body': body,
-    })
+    return _get_transaction(data)

@@ -17,13 +17,6 @@ class ListBlockResponse(Model):
     data = ListType(ModelType(BlockOverview), default=[], required=True)
 
 
-class Block(Model):
-    height = IntType(required=True)
-    hash = StringType(required=True)
-    num_transactions = IntType(required=True)
-    parent_hash = StringType()
-
-
 class SendMoneyTransaction(Model):
     originator = StringType(required=True)
     receiver = StringType(required=True)
@@ -37,3 +30,10 @@ class Transaction(Model):
         [ModelType(SendMoneyTransaction)],
         required=True,
     )
+
+
+class Block(Model):
+    height = IntType(required=True)
+    hash = StringType(required=True)
+    transactions = ListType(ModelType(Transaction), default=[])
+    parent_hash = StringType()

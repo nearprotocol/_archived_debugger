@@ -4,11 +4,14 @@ import {
   Link,
   withRouter,
 } from 'react-router-dom';
+import ReactTable from 'react-table';
 import {
   Header,
   Segment,
   Table,
 } from 'semantic-ui-react';
+
+import "react-table/react-table.css";
 
 import { getBlockByIndex } from './api'
 
@@ -54,6 +57,40 @@ class Block extends React.Component {
   }
 }
 
+export class TransactionsTable extends React.Component {
+  static propTypes = {
+    transactions: PropTypes.array.isRequired,
+  }
+
+  render() {
+    return (
+      <ReactTable
+        data={Object.values(this.props.transactions)}
+        columns={[
+          {
+            Header: 'Hash',
+            accessor: 'hash',
+            maxWidth: 400,
+            Cell: cell => <Link to={`/transaction/${cell.value}`}>{cell.value}</Link>
+          },
+          {
+            Header: 'Originator',
+            accessor: 'body.originator',
+            maxWidth: 100,
+          },
+          {
+            Header: 'Type',
+            accessor: 'type',
+            maxWidth: 100,
+          },
+        ]}
+        className='-striped -highlight'
+        minRows={1}
+      />
+    )
+  }
+}
+
 class BlockView extends React.Component {
   state = {
       block: null,
@@ -81,23 +118,33 @@ class BlockView extends React.Component {
 
   render() {
     const block = this.state.block;
-    var body = null;
+    var blockBody = null;
+    var transactions = null;
     if (block) {
-      body = (
+      blockBody = (
         <Block
           height={block.height}
-          numTransactions={block.num_transactions}
+          numTransactions={block.transactions.length}
           hash={block.hash}
           parentHash={block.parent_hash}
         />
       )
+      if (block.transactions.length > 0) {
+        transactions = (
+          <Segment>
+            <Header>Transactions</Header>
+            <TransactionsTable transactions={block.transactions}/>
+          </Segment>
+        )
+      }
     }
     return (
       <React.Fragment>
         <Segment>
           <Header>Block # {this.props.match.params.blockIndex}</Header>
-          {body}
+          {blockBody}
         </Segment>
+        {transactions}
       </React.Fragment>
     )
   }

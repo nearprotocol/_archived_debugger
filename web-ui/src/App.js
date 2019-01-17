@@ -12,8 +12,6 @@ import {
 
 import "react-table/react-table.css";
 
-import './App.css';
-
 import { listBlocks } from './api'
 
 export class BlockTable extends React.Component {
@@ -29,7 +27,6 @@ export class BlockTable extends React.Component {
           {
             Header: 'Height',
             accessor: 'height',
-            sortable: false,
             maxWidth: 100,
             Cell: cell => <Link to={`/block/${cell.value}`}>{cell.value}</Link>
           },

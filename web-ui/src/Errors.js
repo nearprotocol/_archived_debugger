@@ -10,7 +10,7 @@ export class Error extends React.Component {
     }
 
     goBack = () => {
-        this.props.history.goBack()
+        this.props.history.go(-2)
     }
 
     render() {
