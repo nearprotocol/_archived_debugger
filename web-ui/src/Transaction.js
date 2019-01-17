@@ -22,7 +22,6 @@ class Transaction extends React.Component {
   }
 
   getRowsForSendMoney(body) {
-    console.log('oompty');
     return (
       <React.Fragment>
         <Table.Row>
@@ -37,9 +36,46 @@ class Transaction extends React.Component {
     )
   }
 
-  getTypeSpecificRows(type, body) {
+  getRowsForStake(body) {
+    return (
+      <React.Fragment>
+        <Table.Row>
+          <Table.Cell collapsing>Amount</Table.Cell>
+          <Table.Cell>{body.amount}</Table.Cell>
+        </Table.Row>
+      </React.Fragment>
+    )
+  }
+
+  getRowsForCreateAccount(body) {
+    return (
+      <React.Fragment>
+        <Table.Row>
+          <Table.Cell collapsing>Amount</Table.Cell>
+          <Table.Cell>{body.amount}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell collapsing>New Account ID</Table.Cell>
+          <Table.Cell>{body.new_account_id}</Table.Cell>
+        </Table.Row>
+        {/*
+        TODO (#21): add once b58 encoding is fixed 
+        <Table.Row>
+          <Table.Cell collapsing>Public Key</Table.Cell>
+          <Table.Cell>{body.public_key}</Table.Cell>
+        </Table.Row> 
+        */}
+      </React.Fragment>
+    )
+  }
+
+  getTypeSpecificRows = (type, body) => {
     if (type === 'SendMoney') {
       return this.getRowsForSendMoney(body)
+    } else if (type === 'Stake') {
+      return this.getRowsForStake(body)
+    } else if (type === 'CreateAccount') {
+      return this.getRowsForCreateAccount(body)
     } else {
       this.props.history.push({
         pathname: `/error`,
@@ -48,12 +84,10 @@ class Transaction extends React.Component {
   }
 
   render() {
-    console.log('hoopdy');
     const typeSpecificRows = this.getTypeSpecificRows(
       this.props.type,
       this.props.body,
     );
-    console.log('doopdy');
 
     return (
       <Table definition>
@@ -84,6 +118,8 @@ class Transaction extends React.Component {
     )
   }
 }
+
+const TransactionWithRouter = withRouter(Transaction);
   
 class TransactionView extends React.Component {
   state = {
@@ -115,7 +151,7 @@ class TransactionView extends React.Component {
     var transactionBody = null;
     if (transaction) {
       transactionBody = (
-        <Transaction
+        <TransactionWithRouter
           status={transaction.status}
           type={transaction.transaction.type}
           blockIndex={transaction.block_index}

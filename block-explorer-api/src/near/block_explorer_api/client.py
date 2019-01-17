@@ -4,8 +4,10 @@ from near.block_explorer_api import service
 from near.block_explorer_api.models import (
     Block,
     BlockOverview,
+    CreateAccountTransaction,
     ListBlockResponse,
     SendMoneyTransaction,
+    StakeTransaction,
     Transaction,
     TransactionInfo,
 )
@@ -36,14 +38,24 @@ def _get_transaction(data):
             'receiver': transaction_body['receiver'],
             'amount': transaction_body['amount'],
         })
+    elif transaction_type == 'Stake':
+        body = StakeTransaction({
+            'amount': transaction_body['amount'],
+        })
+    elif transaction_type == 'CreateAccount':
+        body = CreateAccountTransaction({
+            'new_account_id': transaction_body['new_account_id'],
+            'amount': transaction_body['amount'],
+            'public_key': '',
+        })
     else:
-        raise Exception('unhandled exception type')
+        raise Exception("unhandled exception type: {}".format(transaction_type))
 
     return Transaction({
         'hash': data['hash'],
         'type': transaction_type,
         'originator': transaction_body['originator'],
-        'body': body,
+        'body': body.to_primitive(),
     })
 
 

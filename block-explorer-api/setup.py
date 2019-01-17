@@ -9,6 +9,6 @@ setup(
         'flask==1.0.2',
         'gevent==1.3.7',
         'requests==2.21.0',
-        'schematics @ git+https://github.com/azban/schematics.git@3d7b8f34df16500375f168a92998b6adde892893',
+        'schematics @ git+https://github.com/azban/schematics.git@abc09ef84624b4648b5fc7b5f4b64b69d36241c8',
     ],
 )
