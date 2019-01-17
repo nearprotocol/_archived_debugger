@@ -20,8 +20,8 @@ class ListBlockResponse(Model):
 class Block(Model):
     height = IntType(required=True)
     hash = StringType(required=True)
-    num_transactions = StringType(required=True)
-    parent_hash = StringType(required=True)
+    num_transactions = IntType(required=True)
+    parent_hash = StringType()
 
 
 class SendMoneyTransaction(Model):

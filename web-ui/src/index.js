@@ -10,6 +10,7 @@ import { Icon } from 'semantic-ui-react'
 
 import './index.css'
 import { AppWithRouter } from './App';
+import { BlockViewWithRouter } from './Block';
 import {
   Error,
   NotFound,
@@ -60,7 +61,7 @@ class Routing extends React.Component {
             <AppHeaderWithRouter />
             <Switch>
               <Route exact path="/" component={AppWithRouter} />
-              {/* <PrivateRoute exact path="/jobs/:jobId" component={JobWithRouter} /> */}
+              <Route exact path="/block/:blockIndex" component={BlockViewWithRouter} />
               <Route exact path="/error" component={Error} />
               <Route component={NotFound} />
             </Switch>

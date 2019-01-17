@@ -12,3 +12,9 @@ export function listBlocks() {
         .then(handleErrors)
         .then((response) => response.json())
 }
+
+export function getBlockByIndex(blockIndex) {
+    return fetch(`${API_URL}/get_block_by_index/${blockIndex}`)
+        .then(handleErrors)
+        .then((response) => response.json())
+}

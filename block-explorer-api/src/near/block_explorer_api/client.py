@@ -26,11 +26,15 @@ def list_blocks(start=None, limit=None):
 
 
 def _get_block_from_response(block):
+    parent_hash = block['body']['header']['parent_hash']
+    if parent_hash == '11111111111111111111111111111111':
+        parent_hash = None
+
     return Block({
         'height': block['body']['header']['index'],
         'hash': block['hash'],
         'num_transactions': len(block['body']['transactions']),
-        'parent_hash': block['body']['header']['parent_hash'],
+        'parent_hash': parent_hash,
     })
 
 

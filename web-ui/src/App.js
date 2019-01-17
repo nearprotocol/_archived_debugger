@@ -18,7 +18,7 @@ import { listBlocks } from './api'
 
 export class BlockTable extends React.Component {
   static propTypes = {
-    blocks: PropTypes.object.isRequired,
+    blocks: PropTypes.array.isRequired,
   }
 
   render() {
@@ -57,7 +57,7 @@ class App extends React.Component {
     blocks: [],
   }
 
-  componentWillMount() {
+  componentDidMount() {
     listBlocks().then(response => {
       this.setState({ blocks: response.data })
     }).catch((error) => {
