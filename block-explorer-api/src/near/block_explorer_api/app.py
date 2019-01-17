@@ -10,7 +10,8 @@ app = Flask(__name__)
 
 @app.route('/list_blocks', methods=['GET'])
 def list_blocks():
-    response = client.list_blocks()
+    # TODO(#20): create api for server side pagination
+    response = client.list_blocks(limit=100)
     response.validate()
     return jsonify(response.to_primitive())
 
