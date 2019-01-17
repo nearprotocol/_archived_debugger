@@ -62,7 +62,7 @@ class Routing extends React.Component {
               <Route exact path="/" component={AppWithRouter} />
               {/* <PrivateRoute exact path="/jobs/:jobId" component={JobWithRouter} /> */}
               <Route exact path="/error" component={Error} />
-              <Route path="/not_found" component={NotFound} />
+              <Route component={NotFound} />
             </Switch>
           </div>
         </Router>
