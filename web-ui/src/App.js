@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import {
+  Link,
+  withRouter,
+} from 'react-router-dom';
 import ReactTable from "react-table";
 import {
   Header,
@@ -28,6 +31,7 @@ export class BlockTable extends React.Component {
             accessor: 'height',
             sortable: false,
             maxWidth: 100,
+            Cell: cell => <Link to={`/block/${cell.value}`}>{cell.value}</Link>
           },
           {
             Header: 'Transactions',
@@ -35,7 +39,12 @@ export class BlockTable extends React.Component {
             maxWidth: 100,
           },
         ]}
-        showPagination={false}
+        defaultSorted={[
+          {
+            id: 'height',
+            desc: true,
+          }
+        ]}
         className='-striped -highlight'
         minRows={1}
       />
