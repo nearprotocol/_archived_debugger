@@ -1,8 +1,42 @@
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-* {
-    font-family: "Lucida Console", Monaco, monospace
+.App-header {
+  text-align: center;
+  line-height: 0px;
+  background-color: #39C0BA;
+  height: 16px;
+  padding: 28px;
+  color: white;
+  font-size: 1.5em;
+}
+
+.App-back-button {
+  color: white;
+  float: left;
+}
+
+.App-logout-button {
+  float: right;
+}
+
+.App-section {
+  width: 860px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.App-section-heading {
+  display: inline-block;
+  margin: auto;
+}
+
+.App-error-message {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  margin: auto;
 }

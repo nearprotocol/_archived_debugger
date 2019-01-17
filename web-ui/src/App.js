@@ -1,85 +1,38 @@
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import ReactTable from "react-table";
 import {
   Header,
   Segment,
 } from 'semantic-ui-react'
-import io from 'socket.io-client';
 
 import "react-table/react-table.css";
 
 import './App.css';
 
+import { listBlocks } from './api'
 
-class RelativeTimeLabel extends React.Component {
+export class BlockTable extends React.Component {
   static propTypes = {
-    timeStamp: PropTypes.number.isRequired,
-  }
-
-  state = {
-    currentMoment: null,
-    timeStampMoment: null,
-  }
-
-  setCurrentMoment = () => {
-    this.setState({ currentMoment: moment() })
-  }
-
-  setTimeStampMoment = () => {
-    const timeStampMoment = moment.unix(this.props.timeStamp)
-    this.setState({ timeStampMoment })
-  }
-
-  componentWillMount() {
-    this.setCurrentMoment()
-    window.setInterval(this.setCurrentMoment, 1000)
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.timeStamp !== prevProps.timeStamp) {
-      this.setTimeStampMoment()
-    }
-  }
-
-  render() {
-    const { currentMoment, timeStampMoment } = this.state
-    const secondsSinceLastBlock = currentMoment.diff(timeStampMoment, 'seconds')
-    return `${secondsSinceLastBlock}s ago`
-  }
-}
-
-export class PeerTable extends React.Component {
-  static propTypes = {
-    peers: PropTypes.object.isRequired,
+    blocks: PropTypes.object.isRequired,
   }
 
   render() {
     return (
       <ReactTable
-        data={Object.values(this.props.peers)}
+        data={Object.values(this.props.blocks)}
         columns={[
           {
-            Header: 'Name',
-            accessor: 'name',
+            Header: 'Height',
+            accessor: 'height',
             sortable: false,
-            maxWidth: 290,
+            maxWidth: 100,
           },
           {
-            Header: 'Peers',
-            accessor: 'peer_count',
-            maxWidth: 60,
-          },
-          {
-            Header: 'Block',
-            accessor: 'block_height',
-            maxWidth: 150,
-          },
-          {
-            Header: 'Block Hash',
-            accessor: 'block_hash',
-            maxWidth: 150,
+            Header: 'Transactions',
+            accessor: 'num_transactions',
+            maxWidth: 100,
           },
         ]}
         showPagination={false}
@@ -92,35 +45,26 @@ export class PeerTable extends React.Component {
 
 class App extends React.Component {
   state = {
-    peers: {},
-  }
-
-  registerUpdate = (context) => {
-    const peers = this.state.peers
-    const update = Object.assign(context, peers)
-    this.setState({ peers:  update })
+    blocks: [],
   }
 
   componentWillMount() {
-    var socket
-    if (window.location.hostname === 'localhost') {
-      socket = io('localhost:5000')
-    } else if (window.location.hostname.startsWith('dash-webui')) {
-      var origin = window.location.origin.replace('dash-webui', 'dash-server')
-      socket = io(origin)
-    } else {
-      socket = io(window.location.origin, {path: '/dashboard-server/socket.io'})
-    }
-    socket.on('json', this.registerUpdate)
+    listBlocks().then(response => {
+      this.setState({ blocks: response.data })
+    }).catch((error) => {
+      this.props.history.push({
+        pathname: `/error`,
+      })
+    })
   }
 
   render() {
     return (
       <React.Fragment>
         <Segment>
-          <Header>Nodes</Header>
-          <PeerTable
-            peers={this.state.peers}
+          <Header>Blocks</Header>
+          <BlockTable
+            blocks={this.state.blocks}
           />
         </Segment>
       </React.Fragment>
@@ -128,4 +72,4 @@ class App extends React.Component {
   }
 }
 
-export default App
+export const AppWithRouter = withRouter(App)
