@@ -5,8 +5,10 @@ from near.block_explorer_api.models import (
     Block,
     BlockOverview,
     ListBlockResponse,
+    SendMoneyTransaction,
     Transaction,
-    SendMoneyTransaction)
+    TransactionInfo,
+)
 
 
 def list_blocks(start=None, limit=None):
@@ -31,7 +33,6 @@ def _get_transaction(data):
     transaction_body = body[transaction_type]
     if transaction_type == 'SendMoney':
         body = SendMoneyTransaction({
-            'originator': transaction_body['originator'],
             'receiver': transaction_body['receiver'],
             'amount': transaction_body['amount'],
         })
@@ -41,6 +42,7 @@ def _get_transaction(data):
     return Transaction({
         'hash': data['hash'],
         'type': transaction_type,
+        'originator': transaction_body['originator'],
         'body': body,
     })
 
@@ -85,10 +87,15 @@ def list_transactions():
     pass
 
 
-def get_transaction_by_hash(transaction_hash):
-    url = service.config['RPC_URI'] + '/get_transaction'
+def get_transaction_info(transaction_hash):
+    url = service.config['RPC_URI'] + '/get_transaction_info'
     params = {'hash': transaction_hash}
     response = requests.post(url, json=params)
     assert response.status_code == 200, response.status_code
     data = response.json()
-    return _get_transaction(data)
+    transaction = _get_transaction(data['transaction'])
+    return TransactionInfo({
+        'block_index': data['block_index'],
+        'status': data['status'],
+        'transaction': transaction,
+    })

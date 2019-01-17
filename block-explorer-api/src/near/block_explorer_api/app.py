@@ -35,9 +35,9 @@ def list_transactions():
     pass
 
 
-@app.route('/get_transaction_by_hash/<transaction_hash>', methods=['GET'])
-def get_transaction_by_hash(transaction_hash):
-    response = client.get_transaction_by_hash(transaction_hash)
+@app.route('/get_transaction_info/<transaction_hash>', methods=['GET'])
+def get_transaction_info(transaction_hash):
+    response = client.get_transaction_info(transaction_hash)
     response.validate()
     return jsonify(response.to_primitive())
 

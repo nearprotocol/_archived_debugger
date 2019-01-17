@@ -14,8 +14,9 @@ import { BlockViewWithRouter } from './Block';
 import {
   Error,
   NotFound,
-} from './Errors'
-import * as serviceWorker from './serviceWorker'
+} from './Errors';
+import * as serviceWorker from './serviceWorker';
+import { TransactionViewWithRouter } from './Transaction';
 
 class AppHeader extends React.Component {
   goBack = () => {
@@ -62,6 +63,7 @@ class Routing extends React.Component {
             <Switch>
               <Route exact path="/" component={AppWithRouter} />
               <Route exact path="/block/:blockIndex" component={BlockViewWithRouter} />
+              <Route exact path="/transaction/:hash" component={TransactionViewWithRouter} />
               <Route exact path="/error" component={Error} />
               <Route component={NotFound} />
             </Switch>

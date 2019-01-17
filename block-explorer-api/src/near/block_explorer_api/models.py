@@ -18,7 +18,6 @@ class ListBlockResponse(Model):
 
 
 class SendMoneyTransaction(Model):
-    originator = StringType(required=True)
     receiver = StringType(required=True)
     amount = IntType(required=True)
 
@@ -26,10 +25,17 @@ class SendMoneyTransaction(Model):
 class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
+    originator = StringType(required=True)
     body = UnionType(
         [ModelType(SendMoneyTransaction)],
         required=True,
     )
+
+
+class TransactionInfo(Model):
+    block_index = IntType(required=True)
+    status = StringType(required=True)
+    transaction = ModelType(Transaction, required=True)
 
 
 class Block(Model):
