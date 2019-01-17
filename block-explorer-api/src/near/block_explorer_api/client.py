@@ -45,7 +45,9 @@ def get_block_by_index(block_index):
         'limit': 1,
     }
     response = requests.post(url, json=params)
-    block = response.json()['blocks'][0]
+    data = response.json()
+    assert len(data['blocks']) == 1
+    block = data['blocks'][0]
     return _get_block_from_response(block)
 
 
