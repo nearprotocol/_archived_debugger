@@ -17,6 +17,8 @@ import {
 import * as serviceWorker from './serviceWorker';
 import { TransactionViewWithRouter } from './Transaction';
 
+const PATH_PREFIX = process.env.REACT_APP_PATH_PREFIX
+
 class AppHeader extends React.Component {
   goBack = () => {
     if (this.props.location.pathname === "/not_found") {
@@ -44,7 +46,7 @@ class Routing extends React.Component {
   render() {
     return (
       <div className="App">
-        <Router>
+        <Router basename={PATH_PREFIX}>
           <div>
             <AppHeaderWithRouter />
             <Switch>
