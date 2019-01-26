@@ -5,6 +5,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Setup files
+block-explorer-api/build
+block-explorer-api/dist
+
+
+# Npm lock
+package-lock.json
+
 # Runtime data
 pids
 *.pid
