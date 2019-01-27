@@ -24,3 +24,9 @@ export function getTransactionInfo(hash) {
     .then(handleErrors)
     .then((response) => response.json())
 }
+
+export function getContractInfo(name) {
+  return fetch(`${API_URL}/get_contract_info/${name}`)
+    .then(handleErrors)
+    .then((response) => response.json())
+}

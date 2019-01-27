@@ -5,7 +5,8 @@ from schematics.types import (
     ModelType,
     StringType,
     UnionType,
-    BaseType)
+    BaseType,
+    DictType)
 
 
 class BlockOverview(Model):
@@ -77,3 +78,7 @@ class Block(Model):
     hash = StringType(required=True)
     transactions = ListType(ModelType(Transaction), default=[])
     parent_hash = StringType()
+
+
+class ContractInfo(Model):
+    state = DictType(StringType)

@@ -42,5 +42,12 @@ def get_transaction_info(transaction_hash):
     return jsonify(response.to_primitive())
 
 
+@app.route('/get_contract_info/<name>', methods=['GET'])
+def get_contract_info(name):
+    response = client.get_contract_info(name)
+    response.validate()
+    return jsonify(response.to_primitive())
+
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

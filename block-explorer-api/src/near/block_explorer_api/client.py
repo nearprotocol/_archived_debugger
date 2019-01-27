@@ -10,7 +10,8 @@ from near.block_explorer_api.models import (
     StakeTransaction,
     Transaction,
     TransactionInfo,
-    SwapKeyTransaction, DeployContractTransaction, FunctionCallTransaction)
+    SwapKeyTransaction, DeployContractTransaction, FunctionCallTransaction,
+    ContractInfo)
 
 
 def list_blocks(start=None, limit=None):
@@ -131,4 +132,15 @@ def get_transaction_info(transaction_hash):
         'block_index': data['block_index'],
         'status': data['status'],
         'transaction': transaction,
+    })
+
+
+def get_contract_info(name):
+    url = service.config['RPC_URI'] + '/view_state'
+    params = {'contract_account_id': name}
+    response = requests.post(url, json=params)
+    assert response.status_code == 200, response.status_code
+    data = response.json()
+    return ContractInfo({
+        'state': data["values"]
     })
