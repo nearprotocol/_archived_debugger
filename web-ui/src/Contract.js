@@ -14,22 +14,25 @@ import { getContractInfo } from './api'
 
 class Contract extends React.Component {
     static propTypes = {
-        values: PropTypes.string.isRequired
+        values: PropTypes.object.isRequired
     }
 
     render() {
         console.log(this.props);
         return (
-            <Table definition>
-                <Table.Body>
-                    {Object.keys(this.props.values).map((key) => 
-                        <Table.Row>
-                            <Table.Cell>{key}</Table.Cell>
-                            <Table.Cell>{this.props.values[key]}</Table.Cell>
-                        </Table.Row>
-                    )}
-                </Table.Body>
-            </Table>
+            <div>
+                <h2>Contract state</h2>
+                <Table definition>
+                    <Table.Body>
+                        {Object.keys(this.props.values).map((key) => 
+                            <Table.Row key={key}>
+                                <Table.Cell>{key}</Table.Cell>
+                                <Table.Cell>{this.props.values[key]}</Table.Cell>
+                            </Table.Row>
+                        )}
+                    </Table.Body>
+                </Table>
+            </div>
         )
     }
 }

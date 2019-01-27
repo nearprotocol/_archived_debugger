@@ -14,6 +14,10 @@ from near.block_explorer_api.models import (
     ContractInfo)
 
 
+def decode_bytes(bytes):
+    return ''.join([chr(x) for x in bytes])
+
+
 def list_blocks(start=None, limit=None):
     url = service.config['RPC_URI'] + '/get_shard_blocks_by_index'
     params = {
@@ -26,6 +30,7 @@ def list_blocks(start=None, limit=None):
         output.data.append(BlockOverview({
             'height': block['body']['header']['index'],
             'num_transactions': len(block['body']['transactions']),
+            'num_receipts': len(block['body']['new_receipts'])
         }))
     return output
 
@@ -66,9 +71,8 @@ def _get_transaction(data):
         body = FunctionCallTransaction({
             'contract_id': transaction_body['contract_id'],
             'amount': transaction_body['amount'],
-            # TODO (#21): add once encoding is fixed
-            'method_name': '',
-            'args': '',
+            'method_name': decode_bytes(transaction_body['method_name']),
+            'args': decode_bytes(transaction_body['args']),
         })
     else:
         raise Exception("unhandled exception type: {}".format(transaction_type))
@@ -77,7 +81,7 @@ def _get_transaction(data):
         'hash': data['hash'],
         'type': transaction_type,
         'originator': transaction_body['originator'],
-        'body': body,
+        'body': body.to_primitive(),
     })
 
 
@@ -130,7 +134,7 @@ def get_transaction_info(transaction_hash):
     transaction = _get_transaction(data['transaction'])
     return TransactionInfo({
         'block_index': data['block_index'],
-        'status': data['status'],
+        'status': data['result']['status'],
         'transaction': transaction,
     })
 
@@ -142,5 +146,5 @@ def get_contract_info(name):
     assert response.status_code == 200, response.status_code
     data = response.json()
     return ContractInfo({
-        'state': data["values"]
+        'state': {key: decode_bytes(value) for key, value in data["values"].items()}
     })

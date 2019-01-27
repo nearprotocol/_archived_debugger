@@ -74,7 +74,7 @@ class Transaction extends React.Component {
       <React.Fragment>
         <Table.Row>
           <Table.Cell collapsing>Contract ID</Table.Cell>
-          <Table.Cell>{body.contract_id}</Table.Cell>
+          <Table.Cell><Link to={`/contract/${body.contract_id}`}>{body.contract_id}</Link></Table.Cell>
         </Table.Row>
         {/*
         TODO (#21): add once encoding is fixed 
@@ -110,10 +110,8 @@ class Transaction extends React.Component {
       <React.Fragment>
         <Table.Row>
           <Table.Cell collapsing>Contract ID</Table.Cell>
-          <Table.Cell>{body.contract_id}</Table.Cell>
+          <Table.Cell><Link to={`/contract/${body.contract_id}`}>{body.contract_id}</Link></Table.Cell>
         </Table.Row>
-        {/*
-        TODO (#21): add once encoding is fixed 
         <Table.Row>
           <Table.Cell collapsing>Method Name</Table.Cell>
           <Table.Cell>{body.method_name}</Table.Cell>
@@ -122,7 +120,6 @@ class Transaction extends React.Component {
           <Table.Cell collapsing>Args</Table.Cell>
           <Table.Cell>{body.args}</Table.Cell>
         </Table.Row> 
-        */}
         <Table.Row>
           <Table.Cell collapsing>Amount</Table.Cell>
           <Table.Cell>{body.amount}</Table.Cell>

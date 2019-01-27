@@ -100,9 +100,10 @@ class BlockView extends React.Component {
     getBlockByIndex(blockIndex).then(response => {
       this.setState({ block: response })
     }).catch((error) => {
-      this.props.history.push({
-        pathname: `/error`,
-      })
+      console.log(error);
+      // this.props.history.push({
+      //   pathname: `/error`,
+      // })
     })
   }
 

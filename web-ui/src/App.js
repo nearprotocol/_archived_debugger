@@ -35,6 +35,11 @@ export class BlockTable extends React.Component {
             accessor: 'num_transactions',
             maxWidth: 100,
           },
+          {
+            Header: 'Next Block Receipts',
+            accessor: 'num_receipts',
+            maxWidth: 150,
+          },
         ]}
         defaultSorted={[
           {

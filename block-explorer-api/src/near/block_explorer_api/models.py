@@ -12,6 +12,7 @@ from schematics.types import (
 class BlockOverview(Model):
     height = IntType(required=True)
     num_transactions = IntType(required=True)
+    num_receipts = IntType(required=True)
 
 
 class ListBlockResponse(Model):
@@ -54,17 +55,18 @@ class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
     originator = StringType(required=True)
-    body = UnionType(
-        (
-            ModelType(CreateAccountTransaction),
-            ModelType(DeployContractTransaction),
-            ModelType(FunctionCallTransaction),
-            ModelType(SendMoneyTransaction),
-            ModelType(StakeTransaction),
-            ModelType(SwapKeyTransaction),
-        ),
-        required=True,
-    )
+    body = DictType(StringType, required=True)
+    # body = UnionType(
+    #     (
+    #         ModelType(CreateAccountTransaction),
+    #         ModelType(DeployContractTransaction),
+    #         ModelType(FunctionCallTransaction),
+    #         ModelType(SendMoneyTransaction),
+    #         ModelType(StakeTransaction),
+    #         ModelType(SwapKeyTransaction),
+    #     ),
+    #     required=True,
+    # )
 
 
 class TransactionInfo(Model):
