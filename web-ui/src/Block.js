@@ -75,7 +75,7 @@ export class TransactionsTable extends React.Component {
           },
           {
             Header: 'Originator',
-            accessor: 'originator',
+            accessor: 'body.originator',
             maxWidth: 100,
           },
           {

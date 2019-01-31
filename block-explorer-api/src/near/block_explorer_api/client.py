@@ -1,21 +1,19 @@
+import base64
+
 import requests
 
-from near.block_explorer_api import service
+from near.block_explorer_api import (b58, service)
 from near.block_explorer_api.models import (
-    Block,
-    BlockOverview,
-    CreateAccountTransaction,
-    ListBlockResponse,
-    SendMoneyTransaction,
-    StakeTransaction,
-    Transaction,
-    TransactionInfo,
-    SwapKeyTransaction, DeployContractTransaction, FunctionCallTransaction,
-    ContractInfo)
+    Block, BlockOverview, ContractInfo, CreateAccountTransaction,
+    DeployContractTransaction, FunctionCallTransaction, ListBlockResponse,
+    SendMoneyTransaction, StakeTransaction, Transaction, TransactionInfo,
+    SwapKeyTransaction,
+)
+from near.block_explorer_api.protos import signed_transaction_pb2
 
 
-def decode_bytes(bytes):
-    return ''.join([chr(x) for x in bytes])
+def decode_bytes(bytes_):
+    return ''.join([chr(x) for x in bytes_])
 
 
 def list_blocks(start=None, limit=None):
@@ -36,43 +34,51 @@ def list_blocks(start=None, limit=None):
 
 
 def _get_transaction(data):
-    body = data['body']
-    transaction_type = list(body.keys())[0]
-    transaction_body = body[transaction_type]
-    if transaction_type == 'SendMoney':
+    body = base64.b64decode(data['body'])
+    transaction = signed_transaction_pb2.SignedTransaction()
+    transaction.ParseFromString(body)
+    transaction_type = transaction.WhichOneof('body')
+    if transaction_type == 'send_money':
         body = SendMoneyTransaction({
-            'receiver': transaction_body['receiver'],
-            'amount': transaction_body['amount'],
+            'originator': transaction.send_money.originator,
+            'receiver': transaction.send_money.receiver,
+            'amount': transaction.send_money    .amount,
         })
-    elif transaction_type == 'Stake':
+    elif transaction_type == 'stake':
         body = StakeTransaction({
-            'amount': transaction_body['amount'],
+            'originator': transaction.stake.originator,
+            'amount': transaction.body.amount,
         })
-    elif transaction_type == 'CreateAccount':
+    elif transaction_type == 'create_account':
+        public_key = b58.b58encode(transaction.create_account.public_key)
         body = CreateAccountTransaction({
-            'new_account_id': transaction_body['new_account_id'],
-            'amount': transaction_body['amount'],
-            # TODO (#21): add once encoding is fixed
-            'public_key': '',
+            'originator': transaction.create_account.originator,
+            'new_account_id': transaction.create_account.new_account_id,
+            'amount': transaction.create_account.amount,
+            'public_key': public_key,
         })
-    elif transaction_type == 'SwapKey':
+    elif transaction_type == 'swap_key':
+        cur_key = b58.b58encode(transaction.swap_key.cur_key)
+        new_key = b58.b58encode(transaction.swap_key.new_key)
         body = SwapKeyTransaction({
-            # TODO (#21): add once encoding is fixed
-            'current_key': '',
-            'new_key': '',
+            'originator': transaction.swap_key.originator,
+            'cur_key': cur_key,
+            'new_key': new_key,
         })
-    elif transaction_type == 'DeployContract':
+    elif transaction_type == 'deploy_contract':
+        public_key = b58.b58encode(transaction.deploy_contract.public_key)
         body = DeployContractTransaction({
-            'contract_id': transaction_body['contract_id'],
-            # TODO (#21): add once encoding is fixed
-            'public_key': '',
+            'originator': transaction.deploy_contract.originator,
+            'contract_id': transaction.deploy_contract.contract_id,
+            'public_key': public_key,
         })
-    elif transaction_type == 'FunctionCall':
+    elif transaction_type == 'function_call':
         body = FunctionCallTransaction({
-            'contract_id': transaction_body['contract_id'],
-            'amount': transaction_body['amount'],
-            'method_name': decode_bytes(transaction_body['method_name']),
-            'args': decode_bytes(transaction_body['args']),
+            'originator': transaction.function_call.originator,
+            'contract_id': transaction.function_call.contract_id,
+            'amount': transaction.function_call.amount,
+            'method_name': decode_bytes(transaction.function_call.method_name),
+            'args': decode_bytes(transaction.function_call.args),
         })
     else:
         raise Exception("unhandled exception type: {}".format(transaction_type))
@@ -80,8 +86,7 @@ def _get_transaction(data):
     return Transaction({
         'hash': data['hash'],
         'type': transaction_type,
-        'originator': transaction_body['originator'],
-        'body': body.to_primitive(),
+        'body': body,
     })
 
 

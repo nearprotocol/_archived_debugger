@@ -20,31 +20,37 @@ class ListBlockResponse(Model):
 
 
 class CreateAccountTransaction(Model):
+    originator = StringType(required=True)
     new_account_id = StringType(required=True)
     amount = IntType(required=True)
     public_key = StringType(required=True)
 
 
 class SendMoneyTransaction(Model):
+    originator = StringType(required=True)
     receiver = StringType(required=True)
     amount = IntType(required=True)
 
 
 class StakeTransaction(Model):
+    originator = StringType(required=True)
     amount = IntType(required=True)
 
 
 class SwapKeyTransaction(Model):
-    current_key = StringType(required=True)
+    originator = StringType(required=True)
+    cur_key = StringType(required=True)
     new_key = StringType(required=True)
 
 
 class DeployContractTransaction(Model):
+    originator = StringType(required=True)
     contract_id = StringType(required=True)
     public_key = StringType(required=True)
 
 
 class FunctionCallTransaction(Model):
+    originator = StringType(required=True)
     contract_id = StringType(required=True)
     method_name = StringType(required=True)
     args = BaseType(required=True)
@@ -54,19 +60,17 @@ class FunctionCallTransaction(Model):
 class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
-    originator = StringType(required=True)
-    body = DictType(StringType, required=True)
-    # body = UnionType(
-    #     (
-    #         ModelType(CreateAccountTransaction),
-    #         ModelType(DeployContractTransaction),
-    #         ModelType(FunctionCallTransaction),
-    #         ModelType(SendMoneyTransaction),
-    #         ModelType(StakeTransaction),
-    #         ModelType(SwapKeyTransaction),
-    #     ),
-    #     required=True,
-    # )
+    body = UnionType(
+        (
+            ModelType(CreateAccountTransaction),
+            ModelType(DeployContractTransaction),
+            ModelType(FunctionCallTransaction),
+            ModelType(SendMoneyTransaction),
+            ModelType(StakeTransaction),
+            ModelType(SwapKeyTransaction),
+        ),
+        required=True,
+    )
 
 
 class TransactionInfo(Model):

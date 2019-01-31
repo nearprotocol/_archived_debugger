@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'flask==1.0.2',
         'gevent==1.3.7',
+        'protobuf==3.6.1',
         'requests==2.21.0',
         'schematics @ git+https://github.com/azban/schematics.git@abc09ef84624b4648b5fc7b5f4b64b69d36241c8',
     ],

@@ -17,7 +17,6 @@ class Transaction extends React.Component {
     status: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     blockIndex: PropTypes.number.isRequired,
-    originator: PropTypes.string.isRequired,
     body: PropTypes.object.isRequired,
   }
 
@@ -58,13 +57,10 @@ class Transaction extends React.Component {
           <Table.Cell collapsing>New Account ID</Table.Cell>
           <Table.Cell>{body.new_account_id}</Table.Cell>
         </Table.Row>
-        {/*
-        TODO (#21): add once encoding is fixed 
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
         </Table.Row> 
-        */}
       </React.Fragment>
     )
   }
@@ -76,13 +72,10 @@ class Transaction extends React.Component {
           <Table.Cell collapsing>Contract ID</Table.Cell>
           <Table.Cell><Link to={`/contract/${body.contract_id}`}>{body.contract_id}</Link></Table.Cell>
         </Table.Row>
-        {/*
-        TODO (#21): add once encoding is fixed 
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
         </Table.Row> 
-        */}
       </React.Fragment>
     )
   }
@@ -90,17 +83,14 @@ class Transaction extends React.Component {
   getRowsForSwapKey(body) {
     return (
       <React.Fragment>
-      {/*
-      TODO (#21): add once encoding is fixed
         <Table.Row>
           <Table.Cell collapsing>Current Key</Table.Cell>
-          <Table.Cell>{body.current_key}</Table.Cell>
+          <Table.Cell>{body.cur_key}</Table.Cell>
         </Table.Row>
         <Table.Row>
-          <Table.Cell collapsing>Previous Key</Table.Cell>
-          <Table.Cell>{body.previous_key}</Table.Cell>
+          <Table.Cell collapsing>New Key</Table.Cell>
+          <Table.Cell>{body.new_key}</Table.Cell>
         </Table.Row>
-      */}
       </React.Fragment>
     )
   }
@@ -129,17 +119,17 @@ class Transaction extends React.Component {
   }
 
   getTypeSpecificRows = (type, body) => {
-    if (type === 'SendMoney') {
+    if (type === 'send_money') {
       return this.getRowsForSendMoney(body)
-    } else if (type === 'Stake') {
+    } else if (type === 'stake') {
       return this.getRowsForStake(body)
-    } else if (type === 'CreateAccount') {
+    } else if (type === 'create_account') {
       return this.getRowsForCreateAccount(body)
-    } else if (type === 'SwapKey') {
+    } else if (type === 'swap_key') {
       return this.getRowsForSwapKey(body)
-    } else if (type === 'DeployContract') {
+    } else if (type === 'deploy_contract') {
       return this.getRowsForDeployContract(body)
-    } else if (type === 'FunctionCall') {
+    } else if (type === 'function_call') {
       return this.getRowsForFunctionCall(body)
     } else {
       this.props.history.push({
@@ -175,7 +165,7 @@ class Transaction extends React.Component {
           </Table.Row>
           <Table.Row>
             <Table.Cell collapsing>Originator</Table.Cell>
-            <Table.Cell>{this.props.originator}</Table.Cell>
+            <Table.Cell>{this.props.body.originator}</Table.Cell>
           </Table.Row>
           {typeSpecificRows}
         </Table.Body>
@@ -220,7 +210,6 @@ class TransactionView extends React.Component {
           status={transaction.status}
           type={transaction.transaction.type}
           blockIndex={transaction.block_index}
-          originator={transaction.transaction.originator}
           body={transaction.transaction.body}
         />
       )
