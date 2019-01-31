@@ -152,9 +152,9 @@ class Transaction extends React.Component {
             <Table.Cell>{this.props.status}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell collapsing>Block</Table.Cell>
+            <Table.Cell collapsing>Shard Block</Table.Cell>
             <Table.Cell>
-              <Link to={`/block/${this.props.blockIndex}`}>
+              <Link to={`/shard-block/${this.props.blockIndex}`}>
                 {this.props.blockIndex}
               </Link>
             </Table.Cell>

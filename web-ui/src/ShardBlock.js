@@ -13,7 +13,7 @@ import {
 
 import "react-table/react-table.css";
 
-import { getBlockByIndex } from './api'
+import { getShardBlockByIndex } from './api'
 
 class Block extends React.Component {
   static propTypes = {
@@ -27,7 +27,7 @@ class Block extends React.Component {
     var parentHashCell = "null";
     if (this.props.parentHash) {
       parentHashCell = (
-        <Link to={`/block/${this.props.height - 1}`}>
+        <Link to={`/shard-block/${this.props.height - 1}`}>
           {this.props.parentHash}
         </Link>
       );
@@ -91,13 +91,13 @@ export class TransactionsTable extends React.Component {
   }
 }
 
-class BlockView extends React.Component {
+class ShardBlockView extends React.Component {
   state = {
       block: null,
   }
 
   updateBlock(blockIndex) {
-    getBlockByIndex(blockIndex).then(response => {
+    getShardBlockByIndex(blockIndex).then(response => {
       this.setState({ block: response })
     }).catch((error) => {
       console.log(error);
@@ -142,7 +142,7 @@ class BlockView extends React.Component {
     return (
       <React.Fragment>
         <Segment>
-          <Header>Block # {this.props.match.params.blockIndex}</Header>
+          <Header>Shard Block # {this.props.match.params.blockIndex}</Header>
           {blockBody}
         </Segment>
         {transactions}
@@ -151,4 +151,4 @@ class BlockView extends React.Component {
   }
 }
 
-export const BlockViewWithRouter = withRouter(BlockView)
+export const ShardBlockViewWithRouter = withRouter(ShardBlockView)

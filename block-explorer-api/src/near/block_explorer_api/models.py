@@ -9,14 +9,14 @@ from schematics.types import (
     DictType)
 
 
-class BlockOverview(Model):
+class ShardBlockOverview(Model):
     height = IntType(required=True)
     num_transactions = IntType(required=True)
     num_receipts = IntType(required=True)
 
 
-class ListBlockResponse(Model):
-    data = ListType(ModelType(BlockOverview), default=[], required=True)
+class ListShardBlockResponse(Model):
+    data = ListType(ModelType(ShardBlockOverview), default=[], required=True)
 
 
 class CreateAccountTransaction(Model):
@@ -79,7 +79,7 @@ class TransactionInfo(Model):
     transaction = ModelType(Transaction, required=True)
 
 
-class Block(Model):
+class ShardBlock(Model):
     height = IntType(required=True)
     hash = StringType(required=True)
     transactions = ListType(ModelType(Transaction), default=[])

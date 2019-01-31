@@ -8,8 +8,8 @@ import {
 } from 'react-router-dom'
 
 import './index.css'
-import { AppWithRouter } from './App';
-import { BlockViewWithRouter } from './Block';
+import { ShardChainWithRouter } from './ShardChain';
+import { ShardBlockViewWithRouter } from './ShardBlock';
 import {
   Error,
   NotFound,
@@ -51,8 +51,8 @@ class Routing extends React.Component {
           <div>
             <AppHeaderWithRouter />
             <Switch>
-              <Route exact path="/" component={AppWithRouter} />
-              <Route exact path="/block/:blockIndex" component={BlockViewWithRouter} />
+              <Route exact path="/" component={ShardChainWithRouter} />
+              <Route exact path="/shard-block/:blockIndex" component={ShardBlockViewWithRouter} />
               <Route exact path="/transaction/:hash" component={TransactionViewWithRouter} />
               <Route exact path="/contract/:name" component={ContractViewWithRouter} />
               <Route exact path="/error" component={Error} />

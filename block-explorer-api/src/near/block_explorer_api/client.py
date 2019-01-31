@@ -4,10 +4,10 @@ import requests
 
 from near.block_explorer_api import (b58, service)
 from near.block_explorer_api.models import (
-    Block, BlockOverview, ContractInfo, CreateAccountTransaction,
-    DeployContractTransaction, FunctionCallTransaction, ListBlockResponse,
-    SendMoneyTransaction, StakeTransaction, Transaction, TransactionInfo,
-    SwapKeyTransaction,
+    ContractInfo, CreateAccountTransaction, DeployContractTransaction,
+    FunctionCallTransaction, ListShardBlockResponse, SendMoneyTransaction,
+    ShardBlock, ShardBlockOverview, StakeTransaction,  Transaction,
+    TransactionInfo, SwapKeyTransaction,
 )
 from near.block_explorer_api.protos import signed_transaction_pb2
 
@@ -23,9 +23,9 @@ def list_blocks(start=None, limit=None):
         'limit': limit,
     }
     response = requests.post(url, json=params)
-    output = ListBlockResponse()
+    output = ListShardBlockResponse()
     for block in response.json()['blocks']:
-        output.data.append(BlockOverview({
+        output.data.append(ShardBlockOverview({
             'height': block['body']['header']['index'],
             'num_transactions': len(block['body']['transactions']),
             'num_receipts': len(block['body']['new_receipts'])
@@ -90,13 +90,13 @@ def _get_transaction(data):
     })
 
 
-def _get_block_from_response(block):
+def _get_shard_block_from_response(block):
     parent_hash = block['body']['header']['parent_hash']
     if parent_hash == '11111111111111111111111111111111':
         parent_hash = None
 
     transactions = [_get_transaction(t) for t in block['body']['transactions']]
-    return Block({
+    return ShardBlock({
         'height': block['body']['header']['index'],
         'hash': block['hash'],
         'transactions': transactions,
@@ -104,7 +104,7 @@ def _get_block_from_response(block):
     })
 
 
-def get_block_by_index(block_index):
+def get_shard_block_by_index(block_index):
     url = service.config['RPC_URI'] + '/get_shard_blocks_by_index'
     params = {
         'start': block_index,
@@ -114,16 +114,16 @@ def get_block_by_index(block_index):
     data = response.json()
     assert len(data['blocks']) == 1
     block = data['blocks'][0]
-    return _get_block_from_response(block)
+    return _get_shard_block_from_response(block)
 
 
-def get_block_by_hash(block_hash):
+def get_shard_block_by_hash(block_hash):
     url = service.config['RPC_URI'] + '/get_shard_block_by_hash'
     params = {'hash': block_hash}
     response = requests.post(url, json=params)
     assert response.status_code == 200, response.status_code
     block = response.json()
-    return _get_block_from_response(block)
+    return _get_shard_block_from_response(block)
 
 
 def list_transactions():

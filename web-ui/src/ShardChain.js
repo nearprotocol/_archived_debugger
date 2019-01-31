@@ -12,7 +12,7 @@ import {
 
 import "react-table/react-table.css";
 
-import { listBlocks } from './api'
+import { listShardBlocks } from './api'
 
 export class BlockTable extends React.Component {
   static propTypes = {
@@ -28,7 +28,7 @@ export class BlockTable extends React.Component {
             Header: 'Height',
             accessor: 'height',
             maxWidth: 100,
-            Cell: cell => <Link to={`/block/${cell.value}`}>{cell.value}</Link>
+            Cell: cell => <Link to={`/shard-block/${cell.value}`}>{cell.value}</Link>
           },
           {
             Header: 'Transactions',
@@ -54,13 +54,13 @@ export class BlockTable extends React.Component {
   }
 }
 
-class App extends React.Component {
+class ShardChain extends React.Component {
   state = {
     blocks: [],
   }
 
   componentDidMount() {
-    listBlocks().then(response => {
+    listShardBlocks().then(response => {
       this.setState({ blocks: response.data })
     }).catch((error) => {
       this.props.history.push({
@@ -83,4 +83,4 @@ class App extends React.Component {
   }
 }
 
-export const AppWithRouter = withRouter(App)
+export const ShardChainWithRouter = withRouter(ShardChain)
