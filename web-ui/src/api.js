@@ -19,6 +19,18 @@ export function getShardBlockByIndex(blockIndex) {
     .then((response) => response.json())
 }
 
+export function listBeaconBlocks() {
+  return fetch(`${API_URL}/list-beacon-blocks`)
+    .then(handleErrors)
+    .then((response) => response.json())
+}
+
+export function getBeaconBlockByIndex(blockIndex) {
+  return fetch(`${API_URL}/get-beacon-block-by-index/${blockIndex}`)
+    .then(handleErrors)
+    .then((response) => response.json())
+}
+
 export function getTransactionInfo(hash) {
   return fetch(`${API_URL}/get-transaction-info/${hash}`)
     .then(handleErrors)

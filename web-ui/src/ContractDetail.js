@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  Link,
-  withRouter,
-} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
   Header,
   Segment,
@@ -38,7 +35,7 @@ class Contract extends React.Component {
 
 const ContractWithRouter = withRouter(Contract);
 
-class ContractView extends React.Component {
+class ContractDetail extends React.Component {
   state = {
     contract: null,
   }
@@ -85,4 +82,4 @@ class ContractView extends React.Component {
   }
 }
 
-export const ContractViewWithRouter = withRouter(ContractView)
+export const ContractDetailWithRouter = withRouter(ContractDetail)

@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/list-shard-blocks', methods=['GET'])
 def list_blocks():
     # TODO(#20): create api for server side pagination
-    response = client.list_blocks(limit=100)
+    response = client.list_shard_blocks(limit=100)
     response.validate()
     return jsonify(response.to_primitive())
 
@@ -26,6 +26,28 @@ def get_shard_block_by_index(block_index):
 @app.route('/get-shard-block-by-hash/<block_hash>', methods=['GET'])
 def get_shard_block_by_hash(block_hash):
     response = client.get_shard_block_by_hash(block_hash)
+    response.validate()
+    return jsonify(response.to_primitive())
+
+
+@app.route('/list-beacon-blocks', methods=['GET'])
+def list_beacon_blocks():
+    # TODO(#20): create api for server side pagination
+    response = client.list_beacon_blocks(limit=100)
+    response.validate()
+    return jsonify(response.to_primitive())
+
+
+@app.route('/get-beacon-block-by-index/<int:block_index>', methods=['GET'])
+def get_beacon_block_by_index(block_index):
+    response = client.get_beacon_block_by_index(block_index)
+    response.validate()
+    return jsonify(response.to_primitive())
+
+
+@app.route('/get-beacon-block-by-hash/<block_hash>', methods=['GET'])
+def get_beacon_block_by_hash(block_hash):
+    response = client.get_beacon_block_by_hash(block_hash)
     response.validate()
     return jsonify(response.to_primitive())
 

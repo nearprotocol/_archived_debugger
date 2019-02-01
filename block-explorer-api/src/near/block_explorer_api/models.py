@@ -1,22 +1,13 @@
 from schematics import Model
 from schematics.types import (
+    BaseType,
+    DictType,
     IntType,
     ListType,
     ModelType,
     StringType,
     UnionType,
-    BaseType,
-    DictType)
-
-
-class ShardBlockOverview(Model):
-    height = IntType(required=True)
-    num_transactions = IntType(required=True)
-    num_receipts = IntType(required=True)
-
-
-class ListShardBlockResponse(Model):
-    data = ListType(ModelType(ShardBlockOverview), default=[], required=True)
+)
 
 
 class CreateAccountTransaction(Model):
@@ -79,6 +70,10 @@ class TransactionInfo(Model):
     transaction = ModelType(Transaction, required=True)
 
 
+class ContractInfo(Model):
+    state = DictType(StringType)
+
+
 class ShardBlock(Model):
     height = IntType(required=True)
     hash = StringType(required=True)
@@ -86,5 +81,25 @@ class ShardBlock(Model):
     parent_hash = StringType()
 
 
-class ContractInfo(Model):
-    state = DictType(StringType)
+class ShardBlockOverview(Model):
+    height = IntType(required=True)
+    num_transactions = IntType(required=True)
+    num_receipts = IntType(required=True)
+
+
+class ListShardBlockResponse(Model):
+    data = ListType(ModelType(ShardBlockOverview), default=[], required=True)
+
+
+class BeaconBlock(Model):
+    height = IntType(required=True)
+    hash = StringType(required=True)
+    parent_hash = StringType()
+
+
+class BeaconBlockOverview(Model):
+    height = IntType(required=True)
+
+
+class ListBeaconBlockResponse(Model):
+    data = ListType(ModelType(BeaconBlockOverview), default=[], required=True)

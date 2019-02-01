@@ -4,10 +4,10 @@ import requests
 
 from near.block_explorer_api import (b58, service)
 from near.block_explorer_api.models import (
-    ContractInfo, CreateAccountTransaction, DeployContractTransaction,
-    FunctionCallTransaction, ListShardBlockResponse, SendMoneyTransaction,
-    ShardBlock, ShardBlockOverview, StakeTransaction,  Transaction,
-    TransactionInfo, SwapKeyTransaction,
+    BeaconBlock, BeaconBlockOverview, ContractInfo, CreateAccountTransaction,
+    DeployContractTransaction, FunctionCallTransaction, ListBeaconBlockResponse,
+    ListShardBlockResponse, SendMoneyTransaction, ShardBlock, ShardBlockOverview,
+    StakeTransaction, Transaction, TransactionInfo, SwapKeyTransaction,
 )
 from near.block_explorer_api.protos import signed_transaction_pb2
 
@@ -16,7 +16,7 @@ def decode_bytes(bytes_):
     return ''.join([chr(x) for x in bytes_])
 
 
-def list_blocks(start=None, limit=None):
+def list_shard_blocks(start=None, limit=None):
     url = service.config['RPC_URI'] + '/get_shard_blocks_by_index'
     params = {
         'start': start,
@@ -33,6 +33,91 @@ def list_blocks(start=None, limit=None):
     return output
 
 
+def _get_shard_block_from_response(block):
+    parent_hash = block['body']['header']['parent_hash']
+    if parent_hash == '11111111111111111111111111111111':
+        parent_hash = None
+
+    transactions = [_get_transaction(t) for t in block['body']['transactions']]
+    return ShardBlock({
+        'height': block['body']['header']['index'],
+        'hash': block['hash'],
+        'transactions': transactions,
+        'parent_hash': parent_hash,
+    })
+
+
+def get_shard_block_by_index(block_index):
+    url = service.config['RPC_URI'] + '/get_shard_blocks_by_index'
+    params = {
+        'start': block_index,
+        'limit': 1,
+    }
+    response = requests.post(url, json=params)
+    data = response.json()
+    assert len(data['blocks']) == 1
+    block = data['blocks'][0]
+    return _get_shard_block_from_response(block)
+
+
+def get_shard_block_by_hash(block_hash):
+    url = service.config['RPC_URI'] + '/get_shard_block_by_hash'
+    params = {'hash': block_hash}
+    response = requests.post(url, json=params)
+    assert response.status_code == 200, response.status_code
+    block = response.json()
+    return _get_shard_block_from_response(block)
+
+
+def list_beacon_blocks(start=None, limit=None):
+    url = service.config['RPC_URI'] + '/get_beacon_blocks_by_index'
+    params = {
+        'start': start,
+        'limit': limit,
+    }
+    response = requests.post(url, json=params)
+    output = ListBeaconBlockResponse()
+    for block in response.json()['blocks']:
+        output.data.append(BeaconBlockOverview({
+            'height': block['body']['header']['index'],
+        }))
+    return output
+
+
+def _get_beacon_block_from_response(block):
+    parent_hash = block['body']['header']['parent_hash']
+    if parent_hash == '11111111111111111111111111111111':
+        parent_hash = None
+
+    return BeaconBlock({
+        'height': block['body']['header']['index'],
+        'hash': block['hash'],
+        'parent_hash': parent_hash,
+    })
+
+
+def get_beacon_block_by_index(block_index):
+    url = service.config['RPC_URI'] + '/get_beacon_blocks_by_index'
+    params = {
+        'start': block_index,
+        'limit': 1,
+    }
+    response = requests.post(url, json=params)
+    data = response.json()
+    assert len(data['blocks']) == 1
+    block = data['blocks'][0]
+    return _get_beacon_block_from_response(block)
+
+
+def get_beacon_block_by_hash(block_hash):
+    url = service.config['RPC_URI'] + '/get_beacon_block_by_hash'
+    params = {'hash': block_hash}
+    response = requests.post(url, json=params)
+    assert response.status_code == 200, response.status_code
+    block = response.json()
+    return _get_beacon_block_from_response(block)
+
+
 def _get_transaction(data):
     body = base64.b64decode(data['body'])
     transaction = signed_transaction_pb2.SignedTransaction()
@@ -42,7 +127,7 @@ def _get_transaction(data):
         body = SendMoneyTransaction({
             'originator': transaction.send_money.originator,
             'receiver': transaction.send_money.receiver,
-            'amount': transaction.send_money    .amount,
+            'amount': transaction.send_money.amount,
         })
     elif transaction_type == 'stake':
         body = StakeTransaction({
@@ -88,46 +173,6 @@ def _get_transaction(data):
         'type': transaction_type,
         'body': body,
     })
-
-
-def _get_shard_block_from_response(block):
-    parent_hash = block['body']['header']['parent_hash']
-    if parent_hash == '11111111111111111111111111111111':
-        parent_hash = None
-
-    transactions = [_get_transaction(t) for t in block['body']['transactions']]
-    return ShardBlock({
-        'height': block['body']['header']['index'],
-        'hash': block['hash'],
-        'transactions': transactions,
-        'parent_hash': parent_hash,
-    })
-
-
-def get_shard_block_by_index(block_index):
-    url = service.config['RPC_URI'] + '/get_shard_blocks_by_index'
-    params = {
-        'start': block_index,
-        'limit': 1,
-    }
-    response = requests.post(url, json=params)
-    data = response.json()
-    assert len(data['blocks']) == 1
-    block = data['blocks'][0]
-    return _get_shard_block_from_response(block)
-
-
-def get_shard_block_by_hash(block_hash):
-    url = service.config['RPC_URI'] + '/get_shard_block_by_hash'
-    params = {'hash': block_hash}
-    response = requests.post(url, json=params)
-    assert response.status_code == 200, response.status_code
-    block = response.json()
-    return _get_shard_block_from_response(block)
-
-
-def list_transactions():
-    pass
 
 
 def get_transaction_info(transaction_hash):

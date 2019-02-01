@@ -60,7 +60,7 @@ class Transaction extends React.Component {
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
-        </Table.Row> 
+        </Table.Row>
       </React.Fragment>
     )
   }
@@ -75,7 +75,7 @@ class Transaction extends React.Component {
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
-        </Table.Row> 
+        </Table.Row>
       </React.Fragment>
     )
   }
@@ -94,7 +94,7 @@ class Transaction extends React.Component {
       </React.Fragment>
     )
   }
-  
+
   getRowsForFunctionCall(body) {
     return (
       <React.Fragment>
@@ -105,11 +105,11 @@ class Transaction extends React.Component {
         <Table.Row>
           <Table.Cell collapsing>Method Name</Table.Cell>
           <Table.Cell>{body.method_name}</Table.Cell>
-        </Table.Row> 
+        </Table.Row>
         <Table.Row>
           <Table.Cell collapsing>Args</Table.Cell>
           <Table.Cell>{body.args}</Table.Cell>
-        </Table.Row> 
+        </Table.Row>
         <Table.Row>
           <Table.Cell collapsing>Amount</Table.Cell>
           <Table.Cell>{body.amount}</Table.Cell>
@@ -175,10 +175,10 @@ class Transaction extends React.Component {
 }
 
 const TransactionWithRouter = withRouter(Transaction);
-  
-class TransactionView extends React.Component {
+
+class TransactionDetail extends React.Component {
   state = {
-      transaction: null,
+    transaction: null,
   }
 
   updateTransaction(hash) {
@@ -225,4 +225,4 @@ class TransactionView extends React.Component {
   }
 }
 
-export const TransactionViewWithRouter = withRouter(TransactionView)
+export const TransactionDetailWithRouter = withRouter(TransactionDetail)

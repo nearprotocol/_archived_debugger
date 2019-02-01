@@ -12,7 +12,7 @@ import {
 
 import "react-table/react-table.css";
 
-import { listShardBlocks } from './api'
+import { listBeaconBlocks } from './api'
 
 export class BlockTable extends React.Component {
   static propTypes = {
@@ -28,17 +28,7 @@ export class BlockTable extends React.Component {
             Header: 'Height',
             accessor: 'height',
             maxWidth: 100,
-            Cell: cell => <Link to={`/shard-block/${cell.value}`}>{cell.value}</Link>
-          },
-          {
-            Header: 'Transactions',
-            accessor: 'num_transactions',
-            maxWidth: 100,
-          },
-          {
-            Header: 'Next Block Receipts',
-            accessor: 'num_receipts',
-            maxWidth: 150,
+            Cell: cell => <Link to={`/beacon-block/${cell.value}`}>{cell.value}</Link>
           },
         ]}
         defaultSorted={[
@@ -54,13 +44,13 @@ export class BlockTable extends React.Component {
   }
 }
 
-class ShardChain extends React.Component {
+class BeaconChainDetail extends React.Component {
   state = {
     blocks: [],
   }
 
   componentDidMount() {
-    listShardBlocks().then(response => {
+    listBeaconBlocks().then(response => {
       this.setState({ blocks: response.data })
     }).catch((error) => {
       this.props.history.push({
@@ -83,4 +73,4 @@ class ShardChain extends React.Component {
   }
 }
 
-export const ShardChainWithRouter = withRouter(ShardChain)
+export const BeaconChainDetailWithRouter = withRouter(BeaconChainDetail)
