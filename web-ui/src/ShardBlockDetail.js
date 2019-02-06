@@ -17,7 +17,7 @@ import { getShardBlockByIndex } from './api'
 
 class Block extends React.Component {
   static propTypes = {
-    height: PropTypes.number.isRequired,
+    index: PropTypes.number.isRequired,
     numTransactions: PropTypes.number.isRequired,
     hash: PropTypes.string.isRequired,
     parentHash: PropTypes.string,
@@ -27,7 +27,7 @@ class Block extends React.Component {
     var parentHashCell = "null";
     if (this.props.parentHash) {
       parentHashCell = (
-        <Link to={`/shard-block/${this.props.height - 1}`}>
+        <Link to={`/shard-block/${this.props.index - 1}`}>
           {this.props.parentHash}
         </Link>
       );
@@ -40,8 +40,8 @@ class Block extends React.Component {
             <Table.Cell>{this.props.hash}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell collapsing>Height</Table.Cell>
-            <Table.Cell>{this.props.height}</Table.Cell>
+            <Table.Cell collapsing>Index</Table.Cell>
+            <Table.Cell>{this.props.index}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell collapsing>Transactions</Table.Cell>
@@ -124,7 +124,7 @@ class ShardBlockDetail extends React.Component {
     if (block) {
       blockBody = (
         <Block
-          height={block.height}
+          index={block.index}
           numTransactions={block.transactions.length}
           hash={block.hash}
           parentHash={block.parent_hash}

@@ -25,8 +25,8 @@ export class BlockTable extends React.Component {
         data={Object.values(this.props.blocks)}
         columns={[
           {
-            Header: 'Height',
-            accessor: 'height',
+            Header: 'Index',
+            accessor: 'index',
             maxWidth: 100,
             Cell: cell => <Link to={`/shard-block/${cell.value}`}>{cell.value}</Link>
           },
@@ -43,7 +43,7 @@ export class BlockTable extends React.Component {
         ]}
         defaultSorted={[
           {
-            id: 'height',
+            id: 'index',
             desc: true,
           }
         ]}

@@ -14,16 +14,18 @@ import { getBeaconBlockByIndex } from './api'
 
 class Block extends React.Component {
   static propTypes = {
-    height: PropTypes.number.isRequired,
+    index: PropTypes.number.isRequired,
     hash: PropTypes.string.isRequired,
     parentHash: PropTypes.string,
+    shardBlockHash: PropTypes.string.isRequired,
+    shardBlockIndex: PropTypes.number.isRequired,
   }
 
   render() {
     var parentHashCell = "null";
     if (this.props.parentHash) {
       parentHashCell = (
-        <Link to={`/beacon-block/${this.props.height - 1}`}>
+        <Link to={`/beacon-block/${this.props.index - 1}`}>
           {this.props.parentHash}
         </Link>
       );
@@ -36,12 +38,20 @@ class Block extends React.Component {
             <Table.Cell>{this.props.hash}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell collapsing>Height</Table.Cell>
-            <Table.Cell>{this.props.height}</Table.Cell>
+            <Table.Cell collapsing>Index</Table.Cell>
+            <Table.Cell>{this.props.index}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell collapsing>Parent Hash</Table.Cell>
             <Table.Cell>{parentHashCell}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell collapsing>Shard Block Hash</Table.Cell>
+            <Table.Cell>
+              <Link to={`/shard-block/${this.props.shardBlockIndex}`}>
+                {this.props.shardBlockHash}
+              </Link>
+            </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
@@ -78,9 +88,11 @@ class BeaconBlockDetail extends React.Component {
     if (block) {
       blockBody = (
         <Block
-          height={block.height}
+          index={block.index}
           hash={block.hash}
           parentHash={block.parent_hash}
+          shardBlockHash={block.shard_block.hash}
+          shardBlockIndex={block.shard_block.index}
         />
       )
     }

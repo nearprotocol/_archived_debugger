@@ -25,15 +25,15 @@ export class BlockTable extends React.Component {
         data={Object.values(this.props.blocks)}
         columns={[
           {
-            Header: 'Height',
-            accessor: 'height',
+            Header: 'Index',
+            accessor: 'index',
             maxWidth: 100,
             Cell: cell => <Link to={`/beacon-block/${cell.value}`}>{cell.value}</Link>
           },
         ]}
         defaultSorted={[
           {
-            id: 'height',
+            id: 'index',
             desc: true,
           }
         ]}

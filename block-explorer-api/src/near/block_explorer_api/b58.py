@@ -2,7 +2,6 @@ alphabet = b'123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 
 
 def b58encode_int(i, default_one=True):
-    """Encode an integer using Base58"""
     if not i and default_one:
         return alphabet[0:1]
 
@@ -14,7 +13,6 @@ def b58encode_int(i, default_one=True):
 
 
 def b58encode(v):
-    """Encode a string using Base58"""
     p, acc = 1, 0
     for c in reversed(list(bytearray(v))):
         acc += p * c

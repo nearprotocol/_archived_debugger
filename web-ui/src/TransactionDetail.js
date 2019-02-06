@@ -16,7 +16,8 @@ class Transaction extends React.Component {
   static propTypes = {
     status: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    blockIndex: PropTypes.number.isRequired,
+    shardBlockHash: PropTypes.string.isRequired,
+    shardBlockIndex: PropTypes.number.isRequired,
     body: PropTypes.object.isRequired,
   }
 
@@ -154,8 +155,8 @@ class Transaction extends React.Component {
           <Table.Row>
             <Table.Cell collapsing>Shard Block</Table.Cell>
             <Table.Cell>
-              <Link to={`/shard-block/${this.props.blockIndex}`}>
-                {this.props.blockIndex}
+              <Link to={`/shard-block/${this.props.shardBlockIndex}`}>
+                {this.props.shardBlockHash}
               </Link>
             </Table.Cell>
           </Table.Row>
@@ -209,7 +210,8 @@ class TransactionDetail extends React.Component {
         <TransactionWithRouter
           status={transaction.status}
           type={transaction.transaction.type}
-          blockIndex={transaction.block_index}
+          shardBlockHash={transaction.shard_block.hash}
+          shardBlockIndex={transaction.shard_block.index}
           body={transaction.transaction.body}
         />
       )

@@ -43,16 +43,15 @@ class Database(object):
 
     @property
     def session(self):
-        return self._session_getter()
+        session = self._session_getter()
+        if session is None:
+            session = scoped_session(self._session_factory)
+            self.session = session
+        return session
 
     @session.setter
     def session(self, value):
         self._session_setter(value)
-
-    def initialize_session(self):
-        if self.session is None:
-            self.session = scoped_session(self._session_factory)
-        return self.session
 
     def remove_session(self):
         if self.session is not None:
@@ -62,7 +61,7 @@ class Database(object):
     @contextmanager
     def transaction_context(self):
         try:
-            yield self.initialize_session()
+            yield self.session
         except Exception as e:
             if self.session is not None:
                 self.session.rollback()
@@ -70,17 +69,3 @@ class Database(object):
         finally:
             if self.session is not None:
                 self.session.commit()
-
-
-class CustomSqlalchemyType(TypeDecorator):
-    coerce_to_is_types = ()
-    python_type = NotImplemented
-
-    def process_result_value(self, value, dialect):
-        raise NotImplementedError
-
-    def process_literal_param(self, value, dialect):
-        raise NotImplementedError
-
-    def process_bind_param(self, value, dialect):
-        return self.process_literal_param(value, dialect)

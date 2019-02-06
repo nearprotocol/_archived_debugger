@@ -10,6 +10,13 @@ from schematics.types import (
 )
 
 
+class ShardBlockOverview(Model):
+    index = IntType(required=True)
+    hash = StringType(required=True)
+    num_transactions = IntType(required=True)
+    num_receipts = IntType(required=True)
+
+
 class CreateAccountTransaction(Model):
     originator = StringType(required=True)
     new_account_id = StringType(required=True)
@@ -81,6 +88,7 @@ class Log(Model):
 
 
 class TransactionInfo(Model):
+    shard_block = ModelType(ShardBlockOverview, required=True)
     status = StringType(required=True)
     transaction = ModelType(Transaction, required=True)
     logs = ListType(ModelType(Log), required=True, default=True)
@@ -97,12 +105,6 @@ class ShardBlock(Model):
     parent_hash = StringType()
 
 
-class ShardBlockOverview(Model):
-    index = IntType(required=True)
-    num_transactions = IntType(required=True)
-    num_receipts = IntType(required=True)
-
-
 class ListShardBlockResponse(Model):
     data = ListType(ModelType(ShardBlockOverview), default=[], required=True)
 
@@ -111,6 +113,7 @@ class BeaconBlock(Model):
     index = IntType(required=True)
     hash = StringType(required=True)
     parent_hash = StringType()
+    shard_block = ModelType(ShardBlockOverview, required=True)
 
 
 class BeaconBlockOverview(Model):

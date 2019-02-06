@@ -5,14 +5,16 @@ import requests
 from sqlalchemy import desc
 
 from near.block_explorer_api import (b58, pynear)
-from near.block_explorer_api.db_objects import BeaconBlockDbObject, ShardBlockDbObject, TransactionDbObject, \
-    ReceiptDbObject
+from near.block_explorer_api.db_objects import (
+    BeaconBlockDbObject, ReceiptDbObject, ShardBlockDbObject, TransactionDbObject,
+)
 from near.block_explorer_api.models import (
     BeaconBlock, BeaconBlockOverview, ContractInfo, CreateAccountTransaction,
     DeployContractTransaction, FunctionCallTransaction, ListBeaconBlockResponse,
-    ListShardBlockResponse, SendMoneyTransaction, ShardBlock, ShardBlockOverview,
-    StakeTransaction, Transaction, TransactionInfo, SwapKeyTransaction,
-    Log, Receipt)
+    ListShardBlockResponse, Log, Receipt, SendMoneyTransaction, ShardBlock,
+    ShardBlockOverview, StakeTransaction, Transaction, TransactionInfo,
+    SwapKeyTransaction,
+)
 from near.block_explorer_api.protos import signed_transaction_pb2
 from near.block_explorer_api.service import service
 
@@ -24,7 +26,7 @@ def list_beacon_blocks():
         .all()
     for block in beacon_blocks:
         output.data.append(BeaconBlockOverview({
-            'height': block.index,
+            'index': block.index,
         }))
 
     return output
@@ -38,10 +40,22 @@ def get_beacon_block_by_index(index):
     if block is None:
         return None
 
+    assert len(block.shard_blocks) == 1
+    shard_block = _get_shard_block_overview(block.shard_blocks[0])
     return BeaconBlock({
         'index': index,
         'hash': block.hash,
         'parent_hash': block.parent_hash,
+        'shard_block': shard_block,
+    })
+
+
+def _get_shard_block_overview(block):
+    return ShardBlockOverview({
+        'index': block.index,
+        'hash': block.hash,
+        'num_transactions': len(block.transactions),
+        'num_receipts': len(block.receipts)
     })
 
 
@@ -52,15 +66,12 @@ def list_shard_blocks():
         .all()
 
     for block in shard_blocks:
-        output.data.append(ShardBlockOverview({
-            'index': block.index,
-            'num_transactions': len(block.transactions),
-            'num_receipts': len(block.receipts)
-        }))
+        output.data.append(_get_shard_block_overview(block))
+
     return output
 
 
-def get_shard_block_by_hash(index):
+def get_shard_block_by_index(index):
     block = service.db.session.query(ShardBlockDbObject) \
         .filter(ShardBlockDbObject.index == index) \
         .first()
@@ -173,11 +184,13 @@ def get_transaction_info(transaction_hash):
             log_.receipt_hash = hash_
         logs.append(log_)
 
+    shard_block = _get_shard_block_overview(transaction.shard_block)
     transaction = _get_transaction(transaction)
     return TransactionInfo({
         'status': data['result']['status'],
         'transaction': transaction,
         'logs': logs,
+        'shard_block': shard_block,
     })
 
 
@@ -223,7 +236,6 @@ def import_beacon_blocks():
             for shard_block_hash in shard_block_hashes:
                 shard_block = pynear.get_shard_block_by_hash(shard_block_hash)
 
-                print(shard_block)
                 header = shard_block['body']['header']
                 parent_hash = header['parent_hash']
                 if parent_hash == '11111111111111111111111111111111':
@@ -266,19 +278,10 @@ def import_beacon_blocks():
                         receipt_db_object = ReceiptDbObject(
                             hash=hash_,
                             transaction_hash=transaction_hash,
+                            shard_block_hash=shard_block['hash'],
                             parent_hash=parent_hash,
                             originator=receipt['originator'],
                             receiver=receipt['receiver'],
                             body=body,
                         )
                         service.db.session.add(receipt_db_object)
-
-
-if __name__ == '__main__':
-    service.configure()
-    service.db.drop_all()
-    service.db.create_all()
-    with service.db.transaction_context():
-        import_beacon_blocks()
-
-    print(get_transaction_info('BvfwHJKhJurE1ZvAyS3hiS6TWE5fcvUxDYc4C2V9g66W').to_primitive())

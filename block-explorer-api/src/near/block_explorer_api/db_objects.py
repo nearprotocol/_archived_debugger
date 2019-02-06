@@ -35,6 +35,12 @@ class ShardBlockDbObject(DbObject):
         primaryjoin='TransactionDbObject.shard_block_hash == ShardBlockDbObject.hash',
         backref=backref('shard_block', uselist=False),
     )
+    receipts = relationship(
+        'ReceiptDbObject',
+        foreign_keys='ReceiptDbObject.shard_block_hash',
+        primaryjoin='ShardBlockDbObject.hash == ReceiptDbObject.shard_block_hash',
+        backref=backref('shard_block', uselist=False),
+    )
 
 
 class TransactionDbObject(DbObject):
@@ -53,6 +59,7 @@ class TransactionDbObject(DbObject):
     )
 
 
+
 class ReceiptDbObject(DbObject):
     __tablename__ = 'receipt'
     __tableargs__ = (
@@ -61,6 +68,8 @@ class ReceiptDbObject(DbObject):
 
     hash = Column(String, primary_key=True)
     transaction_hash = Column(String)
+    shard_block_hash = Column(String)
+
     originator = Column(String)
     receiver = Column(String)
     body = Column(String)
