@@ -48,6 +48,15 @@ class FunctionCallTransaction(Model):
     amount = IntType(required=True)
 
 
+class Receipt(Model):
+    hash = StringType(required=True)
+    originator = StringType(required=True)
+    receiver = StringType(required=True)
+    body = StringType(required=True)
+    # noinspection PyTypeChecker
+    receipts = ListType(ModelType('Receipt'))
+
+
 class Transaction(Model):
     hash = StringType(required=True)
     type = StringType(required=True)
@@ -62,12 +71,19 @@ class Transaction(Model):
         ),
         required=True,
     )
+    receipts = ListType(ModelType(Receipt), required=True, default=[])
+
+
+class Log(Model):
+    transaction_hash = StringType()
+    receipt_hash = StringType()
+    lines = ListType(StringType)
 
 
 class TransactionInfo(Model):
-    block_index = IntType(required=True)
     status = StringType(required=True)
     transaction = ModelType(Transaction, required=True)
+    logs = ListType(ModelType(Log), required=True, default=True)
 
 
 class ContractInfo(Model):
@@ -75,14 +91,14 @@ class ContractInfo(Model):
 
 
 class ShardBlock(Model):
-    height = IntType(required=True)
+    index = IntType(required=True)
     hash = StringType(required=True)
     transactions = ListType(ModelType(Transaction), default=[])
     parent_hash = StringType()
 
 
 class ShardBlockOverview(Model):
-    height = IntType(required=True)
+    index = IntType(required=True)
     num_transactions = IntType(required=True)
     num_receipts = IntType(required=True)
 
@@ -92,13 +108,13 @@ class ListShardBlockResponse(Model):
 
 
 class BeaconBlock(Model):
-    height = IntType(required=True)
+    index = IntType(required=True)
     hash = StringType(required=True)
     parent_hash = StringType()
 
 
 class BeaconBlockOverview(Model):
-    height = IntType(required=True)
+    index = IntType(required=True)
 
 
 class ListBeaconBlockResponse(Model):

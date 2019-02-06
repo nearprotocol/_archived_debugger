@@ -11,5 +11,9 @@ setup(
         'protobuf==3.6.1',
         'requests==2.21.0',
         'schematics @ git+https://github.com/azban/schematics.git@abc09ef84624b4648b5fc7b5f4b64b69d36241c8',
+        'sqlalchemy==1.2.17',
+    ],
+    tests_require=[
+        'sqlite',
     ],
 )

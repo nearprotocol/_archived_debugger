@@ -15,10 +15,6 @@ def b58encode_int(i, default_one=True):
 
 def b58encode(v):
     """Encode a string using Base58"""
-    pad_size = len(v)
-    v = v.lstrip(b'\0')
-    pad_size -= len(v)
-
     p, acc = 1, 0
     for c in reversed(list(bytearray(v))):
         acc += p * c
@@ -26,4 +22,4 @@ def b58encode(v):
 
     result = b58encode_int(acc, default_one=False)
 
-    return alphabet[0:1] * pad_size + result
+    return result
