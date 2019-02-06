@@ -13,11 +13,11 @@ import {
 
 import "react-table/react-table.css";
 
-import { getBlockByIndex } from './api'
+import { getShardBlockByIndex } from './api'
 
 class Block extends React.Component {
   static propTypes = {
-    height: PropTypes.number.isRequired,
+    index: PropTypes.number.isRequired,
     numTransactions: PropTypes.number.isRequired,
     hash: PropTypes.string.isRequired,
     parentHash: PropTypes.string,
@@ -27,7 +27,7 @@ class Block extends React.Component {
     var parentHashCell = "null";
     if (this.props.parentHash) {
       parentHashCell = (
-        <Link to={`/block/${this.props.height - 1}`}>
+        <Link to={`/shard-block/${this.props.index - 1}`}>
           {this.props.parentHash}
         </Link>
       );
@@ -40,8 +40,8 @@ class Block extends React.Component {
             <Table.Cell>{this.props.hash}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell collapsing>Height</Table.Cell>
-            <Table.Cell>{this.props.height}</Table.Cell>
+            <Table.Cell collapsing>Index</Table.Cell>
+            <Table.Cell>{this.props.index}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell collapsing>Transactions</Table.Cell>
@@ -75,7 +75,7 @@ export class TransactionsTable extends React.Component {
           },
           {
             Header: 'Originator',
-            accessor: 'originator',
+            accessor: 'body.originator',
             maxWidth: 100,
           },
           {
@@ -91,13 +91,13 @@ export class TransactionsTable extends React.Component {
   }
 }
 
-class BlockView extends React.Component {
+class ShardBlockDetail extends React.Component {
   state = {
       block: null,
   }
 
   updateBlock(blockIndex) {
-    getBlockByIndex(blockIndex).then(response => {
+    getShardBlockByIndex(blockIndex).then(response => {
       this.setState({ block: response })
     }).catch((error) => {
       console.log(error);
@@ -124,7 +124,7 @@ class BlockView extends React.Component {
     if (block) {
       blockBody = (
         <Block
-          height={block.height}
+          index={block.index}
           numTransactions={block.transactions.length}
           hash={block.hash}
           parentHash={block.parent_hash}
@@ -142,7 +142,7 @@ class BlockView extends React.Component {
     return (
       <React.Fragment>
         <Segment>
-          <Header>Block # {this.props.match.params.blockIndex}</Header>
+          <Header>Shard Block # {this.props.match.params.blockIndex}</Header>
           {blockBody}
         </Segment>
         {transactions}
@@ -151,4 +151,4 @@ class BlockView extends React.Component {
   }
 }
 
-export const BlockViewWithRouter = withRouter(BlockView)
+export const ShardBlockDetailWithRouter = withRouter(ShardBlockDetail)

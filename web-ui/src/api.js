@@ -7,26 +7,38 @@ function handleErrors(response) {
   return response;
 }
 
-export function listBlocks() {
-  return fetch(`${API_URL}/list_blocks`)
+export function listShardBlocks() {
+  return fetch(`${API_URL}/list-shard-blocks`)
     .then(handleErrors)
     .then((response) => response.json())
 }
 
-export function getBlockByIndex(blockIndex) {
-  return fetch(`${API_URL}/get_block_by_index/${blockIndex}`)
+export function getShardBlockByIndex(blockIndex) {
+  return fetch(`${API_URL}/get-shard-block-by-index/${blockIndex}`)
+    .then(handleErrors)
+    .then((response) => response.json())
+}
+
+export function listBeaconBlocks() {
+  return fetch(`${API_URL}/list-beacon-blocks`)
+    .then(handleErrors)
+    .then((response) => response.json())
+}
+
+export function getBeaconBlockByIndex(blockIndex) {
+  return fetch(`${API_URL}/get-beacon-block-by-index/${blockIndex}`)
     .then(handleErrors)
     .then((response) => response.json())
 }
 
 export function getTransactionInfo(hash) {
-  return fetch(`${API_URL}/get_transaction_info/${hash}`)
+  return fetch(`${API_URL}/get-transaction-info/${hash}`)
     .then(handleErrors)
     .then((response) => response.json())
 }
 
 export function getContractInfo(name) {
-  return fetch(`${API_URL}/get_contract_info/${name}`)
+  return fetch(`${API_URL}/get-contract-info/${name}`)
     .then(handleErrors)
     .then((response) => response.json())
 }

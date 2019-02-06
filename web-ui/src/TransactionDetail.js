@@ -16,8 +16,8 @@ class Transaction extends React.Component {
   static propTypes = {
     status: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    blockIndex: PropTypes.number.isRequired,
-    originator: PropTypes.string.isRequired,
+    shardBlockHash: PropTypes.string.isRequired,
+    shardBlockIndex: PropTypes.number.isRequired,
     body: PropTypes.object.isRequired,
   }
 
@@ -58,13 +58,10 @@ class Transaction extends React.Component {
           <Table.Cell collapsing>New Account ID</Table.Cell>
           <Table.Cell>{body.new_account_id}</Table.Cell>
         </Table.Row>
-        {/*
-        TODO (#21): add once encoding is fixed 
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
-        </Table.Row> 
-        */}
+        </Table.Row>
       </React.Fragment>
     )
   }
@@ -76,13 +73,10 @@ class Transaction extends React.Component {
           <Table.Cell collapsing>Contract ID</Table.Cell>
           <Table.Cell><Link to={`/contract/${body.contract_id}`}>{body.contract_id}</Link></Table.Cell>
         </Table.Row>
-        {/*
-        TODO (#21): add once encoding is fixed 
         <Table.Row>
           <Table.Cell collapsing>Public Key</Table.Cell>
           <Table.Cell>{body.public_key}</Table.Cell>
-        </Table.Row> 
-        */}
+        </Table.Row>
       </React.Fragment>
     )
   }
@@ -90,21 +84,18 @@ class Transaction extends React.Component {
   getRowsForSwapKey(body) {
     return (
       <React.Fragment>
-      {/*
-      TODO (#21): add once encoding is fixed
         <Table.Row>
           <Table.Cell collapsing>Current Key</Table.Cell>
-          <Table.Cell>{body.current_key}</Table.Cell>
+          <Table.Cell>{body.cur_key}</Table.Cell>
         </Table.Row>
         <Table.Row>
-          <Table.Cell collapsing>Previous Key</Table.Cell>
-          <Table.Cell>{body.previous_key}</Table.Cell>
+          <Table.Cell collapsing>New Key</Table.Cell>
+          <Table.Cell>{body.new_key}</Table.Cell>
         </Table.Row>
-      */}
       </React.Fragment>
     )
   }
-  
+
   getRowsForFunctionCall(body) {
     return (
       <React.Fragment>
@@ -115,11 +106,11 @@ class Transaction extends React.Component {
         <Table.Row>
           <Table.Cell collapsing>Method Name</Table.Cell>
           <Table.Cell>{body.method_name}</Table.Cell>
-        </Table.Row> 
+        </Table.Row>
         <Table.Row>
           <Table.Cell collapsing>Args</Table.Cell>
           <Table.Cell>{body.args}</Table.Cell>
-        </Table.Row> 
+        </Table.Row>
         <Table.Row>
           <Table.Cell collapsing>Amount</Table.Cell>
           <Table.Cell>{body.amount}</Table.Cell>
@@ -129,17 +120,17 @@ class Transaction extends React.Component {
   }
 
   getTypeSpecificRows = (type, body) => {
-    if (type === 'SendMoney') {
+    if (type === 'send_money') {
       return this.getRowsForSendMoney(body)
-    } else if (type === 'Stake') {
+    } else if (type === 'stake') {
       return this.getRowsForStake(body)
-    } else if (type === 'CreateAccount') {
+    } else if (type === 'create_account') {
       return this.getRowsForCreateAccount(body)
-    } else if (type === 'SwapKey') {
+    } else if (type === 'swap_key') {
       return this.getRowsForSwapKey(body)
-    } else if (type === 'DeployContract') {
+    } else if (type === 'deploy_contract') {
       return this.getRowsForDeployContract(body)
-    } else if (type === 'FunctionCall') {
+    } else if (type === 'function_call') {
       return this.getRowsForFunctionCall(body)
     } else {
       this.props.history.push({
@@ -162,10 +153,10 @@ class Transaction extends React.Component {
             <Table.Cell>{this.props.status}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell collapsing>Block</Table.Cell>
+            <Table.Cell collapsing>Shard Block</Table.Cell>
             <Table.Cell>
-              <Link to={`/block/${this.props.blockIndex}`}>
-                {this.props.blockIndex}
+              <Link to={`/shard-block/${this.props.shardBlockIndex}`}>
+                {this.props.shardBlockHash}
               </Link>
             </Table.Cell>
           </Table.Row>
@@ -175,7 +166,7 @@ class Transaction extends React.Component {
           </Table.Row>
           <Table.Row>
             <Table.Cell collapsing>Originator</Table.Cell>
-            <Table.Cell>{this.props.originator}</Table.Cell>
+            <Table.Cell>{this.props.body.originator}</Table.Cell>
           </Table.Row>
           {typeSpecificRows}
         </Table.Body>
@@ -185,10 +176,10 @@ class Transaction extends React.Component {
 }
 
 const TransactionWithRouter = withRouter(Transaction);
-  
-class TransactionView extends React.Component {
+
+class TransactionDetail extends React.Component {
   state = {
-      transaction: null,
+    transaction: null,
   }
 
   updateTransaction(hash) {
@@ -219,8 +210,8 @@ class TransactionView extends React.Component {
         <TransactionWithRouter
           status={transaction.status}
           type={transaction.transaction.type}
-          blockIndex={transaction.block_index}
-          originator={transaction.transaction.originator}
+          shardBlockHash={transaction.shard_block.hash}
+          shardBlockIndex={transaction.shard_block.index}
           body={transaction.transaction.body}
         />
       )
@@ -236,4 +227,4 @@ class TransactionView extends React.Component {
   }
 }
 
-export const TransactionViewWithRouter = withRouter(TransactionView)
+export const TransactionDetailWithRouter = withRouter(TransactionDetail)
