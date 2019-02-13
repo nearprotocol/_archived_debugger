@@ -103,8 +103,7 @@ def _get_receipt(db_object):
     })
 
 
-def _get_transaction(db_object):
-    body = base64.b64decode(db_object.body)
+def _decode_transaction_body(body):
     transaction = signed_transaction_pb2.SignedTransaction()
     transaction.ParseFromString(body)
     transaction_type = transaction.WhichOneof('body')
@@ -153,6 +152,12 @@ def _get_transaction(db_object):
     else:
         raise Exception("unhandled exception type: {}".format(transaction_type))
 
+    return transaction_type, body
+
+
+def _get_transaction(db_object):
+    body = base64.b64decode(db_object.body)
+    transaction_type, body = _decode_transaction_body(body)
     receipts = [_get_receipt(r) for r in db_object.receipts]
     return Transaction({
         'hash': db_object.hash,

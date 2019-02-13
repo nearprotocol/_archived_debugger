@@ -5,6 +5,7 @@ from near.block_explorer_api.models import (
     BeaconBlock, ListBeaconBlockResponse, ListShardBlockResponse, ShardBlock,
     TransactionInfo,
 )
+from near.block_explorer_api.service import service
 
 blueprint = Blueprint('api', __name__)
 
@@ -66,3 +67,13 @@ def get_contract_info(name):
     response = client.get_contract_info(name)
     response.validate()
     return jsonify(response.to_primitive())
+
+
+@blueprint.before_request
+def _import_blocks():
+    try:
+        client.import_beacon_blocks()
+    except Exception as e:
+        print('importing failed.. could be due to simultaneous requests')
+        print(e)
+        service.db.session.remove()
