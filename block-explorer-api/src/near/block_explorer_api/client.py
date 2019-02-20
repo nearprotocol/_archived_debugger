@@ -135,11 +135,9 @@ def _decode_transaction_body(body):
             'new_key': new_key,
         })
     elif transaction_type == 'deploy_contract':
-        public_key = b58.b58encode(transaction.deploy_contract.public_key)
         body = DeployContractTransaction({
             'originator': transaction.deploy_contract.originator,
             'contract_id': transaction.deploy_contract.contract_id,
-            'public_key': public_key,
         })
     elif transaction_type == 'function_call':
         body = FunctionCallTransaction({

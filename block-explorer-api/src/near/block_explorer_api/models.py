@@ -44,7 +44,6 @@ class SwapKeyTransaction(Model):
 class DeployContractTransaction(Model):
     originator = StringType(required=True)
     contract_id = StringType(required=True)
-    public_key = StringType(required=True)
 
 
 class FunctionCallTransaction(Model):
