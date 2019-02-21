@@ -11,6 +11,7 @@ body {
   background-color: #4A4F54;
   height: 72px;
   border-radius: 0;
+  margin-bottom: 25px;
 }
 
 .ui.menu .header.item {
@@ -65,4 +66,13 @@ body {
   text-align: center;
   display: inline-block;
   margin: auto;
+}
+
+.ui.container .ui.image {
+  width: 1.1em;
+  padding-bottom: 5px;
+}
+
+.ui.container .ui.header {
+  font-size: 24px;
 }

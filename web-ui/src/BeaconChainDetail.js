@@ -6,11 +6,14 @@ import {
 } from 'react-router-dom';
 import ReactTable from "react-table";
 import {
+  Container,
   Header,
-  Segment,
+  Image,
 } from 'semantic-ui-react'
 
 import "react-table/react-table.css";
+
+import BlocksImage from './images/icon-blocks.svg';
 
 import { listBeaconBlocks } from './api'
 
@@ -62,12 +65,15 @@ class BeaconChainDetail extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Segment>
-          <Header>Blocks</Header>
+        <Container>
+          <Header>
+            <Image src={BlocksImage}></Image>
+            Blocks
+          </Header>
           <BlockTable
             blocks={this.state.blocks}
           />
-        </Segment>
+        </Container>
       </React.Fragment>
     )
   }
