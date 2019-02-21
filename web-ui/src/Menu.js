@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { Image, Menu } from 'semantic-ui-react'
 
 import LogoImage from './images/explorer-logo.svg';
@@ -14,29 +14,31 @@ class MenuComponent extends React.Component {
   render() {
     return (
       <Menu borderless>
-        <Menu.Item header><Image src={LogoImage}/></Menu.Item>
+        <Menu.Item header><Image src={LogoImage} /></Menu.Item>
         <Menu.Item
           name='beaconChain'
           active={this.state.activeItem === 'beaconChain'}
           onClick={this.handleItemClick}
+          as={Link}
+          to='/beacon-chain'
         >
-          <Image className="Menu-icon" src={HomeImage}/>
-          Beacon Chain  
+          <Image className="Menu-icon" src={HomeImage} />
+          Beacon Chain
         </Menu.Item>
         <Menu.Item
           name='shardChains'
           active={this.state.activeItem === 'shardChains'}
           onClick={this.handleItemClick}
         >
-          <Image className="Menu-icon" src={HomeImage}/>
-          Shard Chains  
+          <Image className="Menu-icon" src={HomeImage} />
+          Shard Chains
         </Menu.Item>
         <Menu.Item
           name='transactions'
           active={this.state.activeItem === 'transactions'}
           onClick={this.handleItemClick}
         >
-          <Image className="Menu-icon" src={TransactionsImage}/>
+          <Image className="Menu-icon" src={TransactionsImage} />
           Transactions
         </Menu.Item>
       </Menu>
