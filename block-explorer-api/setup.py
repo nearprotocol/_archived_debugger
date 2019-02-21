@@ -17,5 +17,6 @@ setup(
     tests_require=[
         'delegator.py==0.1.1',
         'pytest==4.3.0',
+        'retrying==1.3.3',
     ],
 )
