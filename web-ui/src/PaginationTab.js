@@ -115,7 +115,7 @@ export class PaginationTab extends Component {
 
     const pages = this.fetchPageNumbers();
     return (
-      <List horizontal>
+      <List horizontal className="PaginationTab">
         {pages.map((page, index) => {
           if (page === LEFT_PAGE)
             return (
@@ -141,6 +141,7 @@ export class PaginationTab extends Component {
               </List.Item>
             );
 
+          console.log("current page: " + this.state.currentPage + "; page: " + page)
           return (
             <List.Item key={index}>
               <Button

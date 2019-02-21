@@ -76,3 +76,16 @@ body {
 .ui.container .ui.header {
   font-size: 24px;
 }
+
+.PaginationTab .ui.button {
+  background: #F8F8F8;
+  color: #6AD1E3;
+  height: 36px;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.PaginationTab .ui.button.active {
+  background: #6AD1E3;
+  color: #ffffff;
+}
