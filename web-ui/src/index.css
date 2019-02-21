@@ -89,3 +89,8 @@ body {
   background: #6AD1E3;
   color: #ffffff;
 }
+
+.PaginationTab .ui.image {
+  width: .5em!important;
+  padding-bottom: 0px!important;
+}
