@@ -5,6 +5,7 @@ import {
   withRouter,
 } from 'react-router-dom';
 import ReactTable from "react-table";
+import ReactTablePagination from "react-table/lib/pagination";
 import {
   Container,
   Header,
@@ -16,8 +17,35 @@ import "react-table/react-table.css";
 import BlocksImage from './images/icon-blocks.svg';
 
 import { listBeaconBlocks } from './api'
+import { PaginationTab } from './PaginationTab'
 
-export class BlockTable extends React.Component {
+
+class Pagination extends ReactTablePagination {
+  handleTabChange(pageNumber) {
+    this.changePage(pageNumber);
+    return this.state.page;
+  }
+
+  render() {
+    const numTotal = this.props.data.length;
+    const first = 1 + this.props.page * this.props.pageSize;
+    const last = Math.min(first + this.props.pageSize, numTotal);
+    console.log(this.props.data.length);
+    return (
+      <React.Fragment>
+        <div>Viewing {first}-{last} of {numTotal}</div>
+        <PaginationTab
+          totalRecords={this.props.data.length}
+          pageLimit={this.props.pageSize}
+          initialPage={this.props.page}
+          onPageChanged={(pageNumber) => this.handleTabChange(pageNumber - 1)}
+        />
+      </React.Fragment>
+    )
+  }
+}
+
+class BlockTable extends React.Component {
   static propTypes = {
     blocks: PropTypes.array.isRequired,
   }
@@ -28,6 +56,8 @@ export class BlockTable extends React.Component {
       <ReactTable
         data={Object.values(this.props.blocks)}
         TheadComponent={TheadComponent}
+        PaginationComponent={Pagination}
+        defaultPageSize={10}
         columns={[
           {
             accessor: 'index',
@@ -41,7 +71,6 @@ export class BlockTable extends React.Component {
             desc: true,
           }
         ]}
-        className='-striped -highlight'
         minRows={1}
       />
     )
