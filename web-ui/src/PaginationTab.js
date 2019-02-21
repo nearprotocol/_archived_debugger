@@ -38,11 +38,11 @@ export class PaginationTab extends Component {
   }
 
   componentDidMount() {
-    this.setState({ currentPage: this.props.initialPage })
+    this.setState({ currentPage: this.props.initialPage + 1 })
   }
 
   gotoPage = (page) => {
-    const currentPage = this.props.onPageChanged(page);
+    const currentPage = this.props.onPageChanged(page) + 1;
     this.setState({ currentPage });
   };
 
@@ -141,12 +141,11 @@ export class PaginationTab extends Component {
               </List.Item>
             );
 
-          console.log("page: " + page + "; current page: " + this.state.currentPage)
           return (
             <List.Item key={index}>
               <Button
                 circular
-                active={this.state.currentPage + 1 === page}
+                active={this.state.currentPage === page}
                 onClick={e => this.handleClick(page, e)}
               >
                 {page}
