@@ -6,7 +6,7 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom'
-import { Image, Menu } from 'semantic-ui-react'
+import { Image, Menu, Header, Label } from 'semantic-ui-react'
 
 import './index.css'
 import {
@@ -15,7 +15,10 @@ import {
 } from './Errors';
 import * as serviceWorker from './serviceWorker';
 
+import Blocks from './images/icon-blocks.svg';
 import Logo from './images/explorer-logo.svg';
+import Home from './images/icon-home.svg';
+import TransactionsIcon from './images/icon-transactions.svg'
 
 import { BeaconBlockDetailWithRouter } from './BeaconBlockDetail';
 import { BeaconChainDetailWithRouter } from './BeaconChainDetail';
@@ -42,8 +45,32 @@ class AppHeader extends React.Component {
 
   render() {
     return (
-      <Menu className="Menu">
-        <Menu.Item header><Image src={Logo}></Image></Menu.Item>
+      <Menu borderless>
+        <Menu.Item header><Image src={Logo}/></Menu.Item>
+        <Menu.Item
+          name='beaconChain'
+          active={this.state.activeItem === 'beaconChain'}
+          onClick={this.handleItemClick}
+        >
+            <Image className="Menu-icon" src={Home}/>
+            Beacon Chain  
+        </Menu.Item>
+        <Menu.Item
+          name='shardChains'
+          active={this.state.activeItem === 'shardChains'}
+          onClick={this.handleItemClick}
+        >
+            <Image className="Menu-icon" src={Home}/>
+            Shard Chains  
+        </Menu.Item>
+        <Menu.Item
+          name='transactions'
+          active={this.state.activeItem === 'transactions'}
+          onClick={this.handleItemClick}
+        >
+            <Image className="Menu-icon" src={TransactionsIcon}/>
+            Transactions
+        </Menu.Item>
       </Menu>
     )
   }

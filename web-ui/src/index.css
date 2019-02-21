@@ -18,6 +18,27 @@ body {
   padding: 0;
 }
 
+.Menu-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.ui.menu .item {
+  color: white;
+  font-family: 'Benton-Sans';
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.ui.menu .item:hover {
+  color: #999999!important;
+}
+
+.ui.menu .active.item {
+  color: #999999;
+}
+
 .App-back-button {
   color: white;
   float: left;
