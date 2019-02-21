@@ -13,7 +13,7 @@ class MenuComponent extends React.Component {
 
   render() {
     return (
-      <Menu borderless>
+      <Menu borderless className="Navbar">
         <Menu.Item header><Image src={LogoImage} /></Menu.Item>
         <Menu.Item
           name='beaconChain'
@@ -22,7 +22,7 @@ class MenuComponent extends React.Component {
           as={Link}
           to='/beacon-chain'
         >
-          <Image className="Menu-icon" src={HomeImage} />
+          <Image className="Navbar-icon" src={HomeImage} />
           Beacon Chain
         </Menu.Item>
         <Menu.Item
@@ -30,7 +30,7 @@ class MenuComponent extends React.Component {
           active={this.state.activeItem === 'shardChains'}
           onClick={this.handleItemClick}
         >
-          <Image className="Menu-icon" src={HomeImage} />
+          <Image className="Navbar-icon" src={HomeImage} />
           Shard Chains
         </Menu.Item>
         <Menu.Item
@@ -38,7 +38,7 @@ class MenuComponent extends React.Component {
           active={this.state.activeItem === 'transactions'}
           onClick={this.handleItemClick}
         >
-          <Image className="Menu-icon" src={TransactionsImage} />
+          <Image className="Navbar-icon" src={TransactionsImage} />
           Transactions
         </Menu.Item>
       </Menu>

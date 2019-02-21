@@ -1,5 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Button, Image, List } from 'semantic-ui-react';
+
+import ArrowLeftImage from './images/icon-arrow-left.svg'
+import ArrowRightImage from './images/icon-arrow-right.svg'
 
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
@@ -20,11 +24,11 @@ export class PaginationTab extends Component {
   static propTypes = {
     totalRecords: PropTypes.number.isRequired,
     pageLimit: PropTypes.number,
-    pageNeighbours: PropTypes.number,
+    pageNeighbors: PropTypes.number,
     onPageChanged: PropTypes.func,
     initialPage: PropTypes.number.isRequired,
   }
-  
+
   state = {
     currentPage: null,
   }
@@ -45,31 +49,34 @@ export class PaginationTab extends Component {
   handleClick = (page, evt) => {
     evt.preventDefault();
     this.gotoPage(page);
+    evt.target.blur();
   };
 
   handleMoveLeft = evt => {
     evt.preventDefault();
-    this.gotoPage(this.state.currentPage - this.pageNeighbours * 2 - 1);
+    this.gotoPage(this.state.currentPage - this.props.pageNeighbors * 2 - 1);
+    evt.target.blur();
   };
 
   handleMoveRight = evt => {
     evt.preventDefault();
-    this.gotoPage(this.state.currentPage + this.pageNeighbours * 2 + 1);
+    this.gotoPage(this.state.currentPage + this.props.pageNeighbors * 2 + 1);
+    evt.target.blur();
   };
 
   fetchPageNumbers = () => {
     const totalPages = this.getTotalPages();
     const currentPage = this.state.currentPage;
-    const pageNeighbours = this.props.pageNeighbours;
+    const pageNeighbors = this.props.pageNeighbors;
 
-    const totalNumbers = this.pageNeighbours * 2 + 3;
+    const totalNumbers = pageNeighbors * 2 + 3;
     const totalBlocks = totalNumbers + 2;
 
     if (totalPages > totalBlocks) {
       let pages = [];
 
-      const leftBound = currentPage - pageNeighbours;
-      const rightBound = currentPage + pageNeighbours;
+      const leftBound = currentPage - pageNeighbors;
+      const rightBound = currentPage + pageNeighbors;
       const beforeLastPage = totalPages - 1;
 
       const startPage = leftBound > 2 ? leftBound : 2;
@@ -106,58 +113,48 @@ export class PaginationTab extends Component {
     if (!this.props.totalRecords) return null;
     if (this.totalPages === 1) return null;
 
-    const { currentPage } = this.state;
     const pages = this.fetchPageNumbers();
     return (
-      <Fragment>
-        <nav aria-label="Countries Pagination">
-          <ul className="pagination">
-            {pages.map((page, index) => {
-              if (page === LEFT_PAGE)
-                return (
-                  <li key={index} className="page-item">
-                    <a
-                      className="page-link"
-                      onClick={this.handleMoveLeft}
-                    >
-                      <span aria-hidden="true">&laquo;</span>
-                      <span className="sr-only">Previous</span>
-                    </a>
-                  </li>
-                );
-
-              if (page === RIGHT_PAGE)
-                return (
-                  <li key={index} className="page-item">
-                    <a
-                      className="page-link"
-                      onClick={this.handleMoveRight}
-                    >
-                      <span aria-hidden="true">&raquo;</span>
-                      <span className="sr-only">Next</span>
-                    </a>
-                  </li>
-                );
-
-              return (
-                <li
-                  key={index}
-                  className={`page-item${
-                    currentPage === page ? " active" : ""
-                    }`}
+      <List horizontal>
+        {pages.map((page, index) => {
+          if (page === LEFT_PAGE)
+            return (
+              <List.Item key={index}>
+                <Button
+                  circular
+                  onClick={this.handleMoveLeft}
                 >
-                  <a
-                    className="page-link"
-                    onClick={e => this.handleClick(page, e)}
-                  >
-                    {page}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </Fragment>
+                  <Image src={ArrowLeftImage} />
+                </Button>
+              </List.Item>
+            );
+
+          if (page === RIGHT_PAGE)
+            return (
+              <List.Item key={index}>
+                <Button
+                  circular
+                  onClick={this.handleMoveRight}
+                >
+                  <Image src={ArrowRightImage} />
+                </Button>
+              </List.Item>
+            );
+
+          console.log("page: " + page + "; current page: " + this.state.currentPage)
+          return (
+            <List.Item key={index}>
+              <Button
+                circular
+                active={this.state.currentPage + 1 === page}
+                onClick={e => this.handleClick(page, e)}
+              >
+                {page}
+              </Button>
+            </List.Item>
+          );
+        })}
+      </List>
     );
   }
 }

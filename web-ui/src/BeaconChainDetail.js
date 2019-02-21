@@ -22,15 +22,15 @@ import { PaginationTab } from './PaginationTab'
 
 class Pagination extends ReactTablePagination {
   handleTabChange(pageNumber) {
-    this.changePage(pageNumber);
-    return this.state.page;
+    const safePage = this.getSafePage(pageNumber);
+    this.changePage(safePage);
+    return safePage;
   }
 
   render() {
     const numTotal = this.props.data.length;
     const first = 1 + this.props.page * this.props.pageSize;
     const last = Math.min(first + this.props.pageSize, numTotal);
-    console.log(this.props.data.length);
     return (
       <React.Fragment>
         <div>Viewing {first}-{last} of {numTotal}</div>
@@ -39,6 +39,7 @@ class Pagination extends ReactTablePagination {
           pageLimit={this.props.pageSize}
           initialPage={this.props.page}
           onPageChanged={(pageNumber) => this.handleTabChange(pageNumber - 1)}
+          pageNeighbors={1}
         />
       </React.Fragment>
     )

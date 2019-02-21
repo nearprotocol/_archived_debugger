@@ -7,36 +7,36 @@ body {
   padding: 0;
 }
 
-.ui.menu {
+.Navbar.menu {
   background-color: #4A4F54;
   height: 72px;
   border-radius: 0;
   margin-bottom: 25px;
 }
 
-.ui.menu .header.item {
+.Navbar.menu .header.item {
   width: 215px;
   padding: 0;
 }
 
-.Menu-icon {
+.Navbar-icon {
   width: 24px;
   height: 24px;
   margin-right: 10px;
 }
 
-.ui.menu .item {
+.Navbar.menu .item {
   color: white;
   font-family: 'Benton-Sans';
   font-weight: 400;
-  font-size: 16px;
+ font-size: 16px;
 }
 
-.ui.menu .item:hover {
+.Navbar.menu .item:hover {
   color: #999999!important;
 }
 
-.ui.menu .active.item {
+.Navbar.menu .active.item {
   color: #999999;
 }
 
