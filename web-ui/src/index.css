@@ -7,14 +7,15 @@ body {
   padding: 0;
 }
 
-.App-header {
-  text-align: center;
-  line-height: 0px;
-  background-color: #39C0BA;
-  height: 16px;
-  padding: 28px;
-  color: white;
-  font-size: 1.5em;
+.ui.menu {
+  background-color: #4A4F54;
+  height: 72px;
+  border-radius: 0;
+}
+
+.ui.menu .header.item {
+  width: 215px;
+  padding: 0;
 }
 
 .App-back-button {

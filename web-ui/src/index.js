@@ -6,6 +6,7 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom'
+import { Image, Menu } from 'semantic-ui-react'
 
 import './index.css'
 import {
@@ -13,6 +14,8 @@ import {
   NotFound,
 } from './Errors';
 import * as serviceWorker from './serviceWorker';
+
+import Logo from './images/explorer-logo.svg';
 
 import { BeaconBlockDetailWithRouter } from './BeaconBlockDetail';
 import { BeaconChainDetailWithRouter } from './BeaconChainDetail';
@@ -24,6 +27,10 @@ import { TransactionDetailWithRouter } from './TransactionDetail';
 const PATH_PREFIX = process.env.REACT_APP_PATH_PREFIX
 
 class AppHeader extends React.Component {
+  state = {}
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
   goBack = () => {
     if (this.props.location.pathname === "/not_found") {
       console.log("going")
@@ -35,11 +42,9 @@ class AppHeader extends React.Component {
 
   render() {
     return (
-      <div>
-        <header className="App-header">
-          Block Debugger
-        </header>
-      </div>
+      <Menu className="Menu">
+        <Menu.Item header><Image src={Logo}></Image></Menu.Item>
+      </Menu>
     )
   }
 }
