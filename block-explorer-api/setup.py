@@ -13,7 +13,9 @@ setup(
         'schematics @ git+https://github.com/azban/schematics.git@abc09ef84624b4648b5fc7b5f4b64b69d36241c8',
         'sqlalchemy==1.2.17',
     ],
+    setup_requires=['pytest-runner'],
     tests_require=[
-        'sqlite',
+        'delegator.py==0.1.1',
+        'pytest==4.3.0',
     ],
 )

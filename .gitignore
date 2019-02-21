@@ -71,3 +71,6 @@ typings/
 .idea/
 *.pyc
 *.egg-info
+
+.eggs
+**/storage/
