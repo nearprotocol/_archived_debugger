@@ -23,12 +23,13 @@ export class BlockTable extends React.Component {
   }
 
   render() {
+    const TheadComponent = props => null;
     return (
       <ReactTable
         data={Object.values(this.props.blocks)}
+        TheadComponent={TheadComponent}
         columns={[
           {
-            Header: 'Index',
             accessor: 'index',
             maxWidth: 100,
             Cell: cell => <Link to={`/beacon-block/${cell.value}`}>{cell.value}</Link>
