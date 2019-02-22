@@ -40,7 +40,7 @@ class Service(object):
         )
         self._db.connect('sqlite:////tmp/dinger.db')
 
-        rpc_uri = os.environ.get('NEAR_RPC_URI', 'http://localhost:3030'),
+        rpc_uri = os.environ.get('NEAR_RPC_URI', 'http://localhost:3030/')
         self._nearlib = NearLib(rpc_uri)
 
 

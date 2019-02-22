@@ -2,14 +2,16 @@ import os
 
 import delegator
 import pytest
-import requests
 from retrying import retry
+
+from near.block_explorer_api.service import service
+
+service.configure()
 
 
 @retry(stop_max_attempt_number=5, wait_fixed=1000)
 def check_devnet_health():
-    response = requests.get('http://localhost:3030/healthz')
-    assert response.status_code == 200
+    assert service.nearlib.check_health()
 
 
 @pytest.fixture(scope='module')

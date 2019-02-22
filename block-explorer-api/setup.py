@@ -4,7 +4,7 @@ from setuptools.command.install import install
 from setuptools.command.test import test
 import subprocess
 
-PYNEAR_HASH = 'bb3e0cf141596dca432fe7d24b197761b7e19360'
+PYNEAR_HASH = 'efc214bee82314d61373c82f2e5aee48875c4f21'
 
 
 # required because of https://stackoverflow.com/a/53412651
