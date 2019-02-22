@@ -59,7 +59,6 @@ class TransactionDbObject(DbObject):
     )
 
 
-
 class ReceiptDbObject(DbObject):
     __tablename__ = 'receipt'
     __tableargs__ = (

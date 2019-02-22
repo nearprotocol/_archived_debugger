@@ -1,14 +1,52 @@
 from setuptools import setup, find_packages
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from setuptools.command.test import test
+import subprocess
+
+PYNEAR_HASH = 'bb3e0cf141596dca432fe7d24b197761b7e19360'
+
+
+# required because of https://stackoverflow.com/a/53412651
+def install_pynear():
+    pip_url = "git+https://github.com/nearprotocol/" \
+              "nearcore.git@{}#egg=near.pynear&subdirectory=pynear" \
+        .format(PYNEAR_HASH)
+    pip_command = "pip install {}".format(pip_url)
+    subprocess.check_call(pip_command.split())
+
+
+class CustomDevelop(develop):
+    def run(self):
+        install_pynear()
+        develop.run(self)
+
+
+class CustomInstall(install):
+    def run(self):
+        install_pynear()
+        install.run(self)
+
+
+class CustomTest(test):
+    def run(self):
+        install_pynear()
+        test.run(self)
+
 
 setup(
     name='near.block_explorer_api',
     version='0.0.0',
     packages=find_packages('src'),
     package_dir={'': 'src'},
+    cmdclass={
+        'develop': CustomDevelop,
+        'install': CustomInstall,
+        'test': CustomTest,
+    },
     install_requires=[
         'flask==1.0.2',
         'gevent==1.3.7',
-        'protobuf==3.6.1',
         'requests==2.21.0',
         'schematics @ git+https://github.com/azban/schematics.git@abc09ef84624b4648b5fc7b5f4b64b69d36241c8',
         'sqlalchemy==1.2.17',

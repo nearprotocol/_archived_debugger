@@ -4,7 +4,6 @@ import json
 import requests
 from sqlalchemy import desc
 
-from near.block_explorer_api import (b58, pynear)
 from near.block_explorer_api.db_objects import (
     BeaconBlockDbObject, ReceiptDbObject, ShardBlockDbObject, TransactionDbObject,
 )
@@ -17,6 +16,7 @@ from near.block_explorer_api.models import (
 )
 from near.block_explorer_api.protos import signed_transaction_pb2
 from near.block_explorer_api.service import service
+from near.pynear import b58
 
 
 def list_beacon_blocks():
@@ -172,7 +172,7 @@ def get_transaction_info(transaction_hash):
         return None
 
     # TODO(#26): stop fetching transaction status from nearcore
-    data = pynear.get_transaction_result(transaction_hash)
+    data = service.nearlib.get_transaction_result(transaction_hash)
 
     logs = []
     for log in data['result']['logs']:
@@ -209,16 +209,16 @@ def get_contract_info(name):
 
 
 def import_beacon_blocks():
-    response = service.db.session.query(BeaconBlockDbObject.index) \
+    latest_block_index = service.db.session.query(BeaconBlockDbObject.index) \
         .order_by(desc(BeaconBlockDbObject.index)) \
         .first()
 
-    if response is None:
+    if latest_block_index is None:
         start_index = 0
     else:
-        start_index = response[0] + 1
+        start_index = latest_block_index[0] + 1
 
-    response = pynear.list_beacon_blocks(start_index)
+    response = service.nearlib.list_beacon_blocks(start_index)
     transaction_results = {}
     with service.db.transaction_context():
         for beacon_block in response['blocks']:
@@ -237,7 +237,7 @@ def import_beacon_blocks():
 
             shard_block_hashes = [header['shard_block_hash']]
             for shard_block_hash in shard_block_hashes:
-                shard_block = pynear.get_shard_block_by_hash(shard_block_hash)
+                shard_block = service.nearlib.get_shard_block_by_hash(shard_block_hash)
 
                 header = shard_block['body']['header']
                 parent_hash = header['parent_hash']
@@ -254,7 +254,7 @@ def import_beacon_blocks():
                 service.db.session.add(shard_block_db_object)
 
                 for transaction in shard_block['body']['transactions']:
-                    result = pynear.get_transaction_result(transaction['hash'])
+                    result = service.nearlib.get_transaction_result(transaction['hash'])
                     for log in result['result']['logs']:
                         parent_hash = b58.b58encode(log['hash'])
                         for receipt_hash in log['receipts']:
