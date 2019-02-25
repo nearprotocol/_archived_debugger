@@ -4,14 +4,16 @@ from setuptools.command.install import install
 from setuptools.command.test import test
 import subprocess
 
-PYNEAR_HASH = 'efc214bee82314d61373c82f2e5aee48875c4f21'
+PYNEAR_HASH = '070c6829d211d9132fb5847b4314a46f42136865'
 
 
 # required because of https://stackoverflow.com/a/53412651
-def install_pynear():
+def install_pynear(install_test_utils=False):
     pip_url = "git+https://github.com/nearprotocol/" \
               "nearcore.git@{}#egg=near.pynear&subdirectory=pynear" \
         .format(PYNEAR_HASH)
+    if install_test_utils:
+        pip_url += '[test_utils]'
     pip_command = "pip install {}".format(pip_url)
     subprocess.check_call(pip_command.split())
 
@@ -30,7 +32,7 @@ class CustomInstall(install):
 
 class CustomTest(test):
     def run(self):
-        install_pynear()
+        install_pynear(install_test_utils=True)
         test.run(self)
 
 
