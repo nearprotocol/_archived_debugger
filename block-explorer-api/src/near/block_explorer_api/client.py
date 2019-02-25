@@ -275,6 +275,10 @@ def import_beacon_blocks():
                 for receipt_block in shard_block['body']['receipts']:
                     for receipt in receipt_block['receipts']:
                         hash_ = b58.b58encode(receipt['nonce'])
+                        # TODO(#36): fix lookup if txn does not exist in fetch
+                        if hash_ not in transaction_results:
+                            continue
+
                         parent_hash, transaction_hash = transaction_results[hash_]
                         body = json.dumps(receipt['body'])
                         receipt_db_object = ReceiptDbObject(
