@@ -1,27 +1,20 @@
-import os
+from near.pynear.test_utils.cli import CliHelpers
+# noinspection PyUnresolvedReferences
+from near.pynear.test_utils.fixtures import *
 
-import delegator
-import pytest
-from retrying import retry
-
+from near.block_explorer_api import client
 from near.block_explorer_api.service import service
 
 service.configure()
+service.db.create_all()
 
 
-@retry(stop_max_attempt_number=5, wait_fixed=1000)
-def check_devnet_health():
-    assert service.nearlib.check_health()
+def test_import_block_pagination(make_devnet, tmpdir):
+    port = make_devnet(tmpdir)
+    for i in range(0, 1):
+        account_id = "test_account.{}".format(i)
+        CliHelpers(port).create_account(account_id)
 
-
-@pytest.fixture(scope='module')
-def devnet_is_running():
-    devnet_exe = os.environ['NEAR_DEVNET_EXE']
-    command = delegator.run("{}".format(devnet_exe), block=False)
-    check_devnet_health()
-    yield True
-    command.kill()
-
-
-def test(devnet_is_running):
-    assert devnet_is_running
+    client.import_beacon_blocks()
+    response = client.list_beacon_blocks()
+    assert len(response.data) == 3
