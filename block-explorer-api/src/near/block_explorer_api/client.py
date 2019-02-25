@@ -14,9 +14,8 @@ from near.block_explorer_api.models import (
     ShardBlockOverview, StakeTransaction, Transaction, TransactionInfo,
     SwapKeyTransaction,
 )
-from near.block_explorer_api.protos import signed_transaction_pb2
 from near.block_explorer_api.service import service
-from near.pynear import b58
+from near.pynear import b58, protos
 
 
 def list_beacon_blocks():
@@ -104,7 +103,7 @@ def _get_receipt(db_object):
 
 
 def _decode_transaction_body(body):
-    transaction = signed_transaction_pb2.SignedTransaction()
+    transaction = protos.signed_transaction_pb2.SignedTransaction()
     transaction.ParseFromString(body)
     transaction_type = transaction.WhichOneof('body')
     if transaction_type == 'send_money':
