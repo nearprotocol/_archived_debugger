@@ -2,8 +2,8 @@ from near.pynear.test_utils.cli import CliHelpers
 # noinspection PyUnresolvedReferences
 from near.pynear.test_utils.fixtures import *
 
-from near.block_explorer_api import client
-from near.block_explorer_api.service import service
+from near.debugger_api import client
+from near.debugger_api.service import service
 
 service.configure()
 service.db.create_all()

@@ -37,7 +37,7 @@ class CustomTest(test):
 
 
 setup(
-    name='near.block_explorer_api',
+    name='near.debugger_api',
     version='0.0.0',
     packages=find_packages('src'),
     package_dir={'': 'src'},

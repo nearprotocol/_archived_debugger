@@ -1,13 +1,27 @@
-from flask import Blueprint, jsonify
+import json
 
-from near.block_explorer_api import client
-from near.block_explorer_api.models import (
-    BeaconBlock, ListBeaconBlockResponse, ListShardBlockResponse, ShardBlock,
-    TransactionInfo,
+from flask import Blueprint, jsonify, request
+
+from near.debugger_api import client
+from near.debugger_api.models import (
+    BeaconBlock, ListBeaconBlockResponse, ListShardBlockResponse,
+    PaginationOptions, ShardBlock, TransactionInfo,
 )
-from near.block_explorer_api.service import service
+from near.debugger_api.service import service
 
 blueprint = Blueprint('api', __name__)
+
+
+def _get_pagination_options_from_args(args):
+    options = PaginationOptions()
+    if 'page_size' in args:
+        options.page_size = args['page_size']
+    if 'page' in args:
+        options.page = args.get('page')
+    if 'sort_options' in args:
+        options.sort_options = json.loads(args['sort_options'])
+    options.validate()
+    return options
 
 
 @blueprint.route(
@@ -16,8 +30,8 @@ blueprint = Blueprint('api', __name__)
     output_schema=ListBeaconBlockResponse,
 )
 def list_beacon_blocks():
-    # TODO(#20): create api for server side pagination
-    response = client.list_beacon_blocks()
+    pagination_options = _get_pagination_options_from_args(request.args)
+    response = client.list_beacon_blocks(pagination_options)
     return jsonify(response.to_primitive())
 
 

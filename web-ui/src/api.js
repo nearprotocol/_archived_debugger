@@ -1,5 +1,21 @@
 const API_URL = process.env.REACT_APP_API_URL
 
+function dictToURI(dict) {
+  var str = [];
+  for (var p in dict) {
+    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(dict[p]));
+  }
+  return str.join("&");
+}
+
+export function generatePaginationOptions(page, pageSize, sortOptions) {
+  return dictToURI({
+    page,
+    page_size: pageSize,
+    sort_options: JSON.stringify(sortOptions),
+  })
+}
+
 function handleErrors(response) {
   if (response.status !== 200) {
     throw response
@@ -7,8 +23,8 @@ function handleErrors(response) {
   return response;
 }
 
-export function listShardBlocks() {
-  return fetch(`${API_URL}/list-shard-blocks`)
+export function listShardBlocks(paginationOptions) {
+  return fetch(`${API_URL}/list-shard-blocks?${paginationOptions}`)
     .then(handleErrors)
     .then((response) => response.json())
 }
@@ -19,8 +35,8 @@ export function getShardBlockByIndex(blockIndex) {
     .then((response) => response.json())
 }
 
-export function listBeaconBlocks() {
-  return fetch(`${API_URL}/list-beacon-blocks`)
+export function listBeaconBlocks(paginationOptions) {
+  return fetch(`${API_URL}/list-beacon-blocks?${paginationOptions}`)
     .then(handleErrors)
     .then((response) => response.json())
 }

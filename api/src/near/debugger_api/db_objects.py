@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Index, Integer, String, ForeignKey
 from sqlalchemy.orm import backref, relationship
 
-from near.block_explorer_api.service import DbObject
+from near.debugger_api.service import DbObject
 
 
 class BeaconBlockDbObject(DbObject):

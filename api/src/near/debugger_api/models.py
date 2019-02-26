@@ -1,6 +1,7 @@
 from schematics import Model
 from schematics.types import (
     BaseType,
+    BooleanType,
     DictType,
     IntType,
     ListType,
@@ -8,6 +9,17 @@ from schematics.types import (
     StringType,
     UnionType,
 )
+
+
+class SortOption(Model):
+    desc = BooleanType(required=True)
+    id = StringType(required=True)
+
+
+class PaginationOptions(Model):
+    page_size = IntType(default=10)
+    page = IntType(default=0)
+    sort_options = ListType(ModelType(SortOption), default=[])
 
 
 class ShardBlockOverview(Model):
@@ -121,3 +133,4 @@ class BeaconBlockOverview(Model):
 
 class ListBeaconBlockResponse(Model):
     data = ListType(ModelType(BeaconBlockOverview), default=[], required=True)
+    num_pages = IntType(required=True)

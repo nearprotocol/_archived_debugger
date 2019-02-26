@@ -3,7 +3,7 @@ import os
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 
-from near.block_explorer_api.utils.sql import Database
+from near.debugger_api.utils.sql import Database
 from near.pynear.lib import NearLib
 
 metadata = MetaData()

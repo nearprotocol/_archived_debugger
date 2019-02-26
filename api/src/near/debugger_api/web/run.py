@@ -2,9 +2,9 @@ import sys
 import threading
 import time
 
-from near.block_explorer_api import client
-from near.block_explorer_api.service import service
-from near.block_explorer_api.web.app import create_app
+from near.debugger_api import client
+from near.debugger_api.service import service
+from near.debugger_api.web.app import create_app
 
 if __name__ == '__main__':
     app = create_app(service)
@@ -32,4 +32,4 @@ if __name__ == '__main__':
     block_import_thread = BlockImportThread()
     block_import_thread.start()
 
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

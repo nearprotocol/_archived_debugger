@@ -1,33 +1,73 @@
 import base64
 import json
+from typing import Optional, Type
 
 import requests
-from sqlalchemy import desc
 
-from near.block_explorer_api.db_objects import (
+from near.debugger_api.db_objects import (
     BeaconBlockDbObject, ReceiptDbObject, ShardBlockDbObject, TransactionDbObject,
 )
-from near.block_explorer_api.models import (
+from near.debugger_api.models import (
     BeaconBlock, BeaconBlockOverview, ContractInfo, CreateAccountTransaction,
     DeployContractTransaction, FunctionCallTransaction, ListBeaconBlockResponse,
-    ListShardBlockResponse, Log, Receipt, SendMoneyTransaction, ShardBlock,
-    ShardBlockOverview, StakeTransaction, Transaction, TransactionInfo,
-    SwapKeyTransaction,
+    ListShardBlockResponse, Log, Receipt, PaginationOptions, SendMoneyTransaction,
+    ShardBlock, ShardBlockOverview, SortOption, StakeTransaction, SwapKeyTransaction,
+    Transaction, TransactionInfo,
 )
-from near.block_explorer_api.service import service
+from near.debugger_api.service import service, DbObject
 from near.pynear import b58, protos
 
 
-def list_beacon_blocks():
+def _validate_pagination_options(
+        db_object_cls: Type[DbObject],
+        options: Optional[PaginationOptions] = None,
+):
+    if options is None:
+        options = PaginationOptions()
+
+    column_names = [column.name for column in db_object_cls.__table__.columns]
+    for sort_option in options.sort_options:
+        if sort_option.id not in column_names:
+            msg = "sort id {} not a column of {}" \
+                .format(sort_option.id, db_object_cls)
+            raise Exception(msg)
+    return options
+
+
+def list_beacon_blocks(
+        pagination_options: Optional[PaginationOptions] = None,
+) -> ListBeaconBlockResponse:
+    pagination_options = _validate_pagination_options(
+        BeaconBlockDbObject,
+        pagination_options,
+    )
+    if len(pagination_options.sort_options) == 0:
+        pagination_options.sort_options = [
+            SortOption({'id': 'index', 'desc': True})
+        ]
+
+    order_by = []
+    for sort_option in pagination_options.sort_options:
+        order = getattr(BeaconBlockDbObject, sort_option.id)
+        if sort_option.desc:
+            order = order.desc()
+        order_by.append(order)
+
+    offset = pagination_options.page * pagination_options.page_size
     output = ListBeaconBlockResponse()
     beacon_blocks = service.db.session.query(BeaconBlockDbObject) \
-        .order_by(desc(BeaconBlockDbObject.index)) \
+        .order_by(*order_by) \
+        .offset(offset) \
+        .limit(pagination_options.page_size) \
         .all()
+
     for block in beacon_blocks:
         output.data.append(BeaconBlockOverview({
             'index': block.index,
         }))
 
+    count = service.db.session.query(BeaconBlockDbObject).count()
+    output.num_pages = count // pagination_options.page_size + 1
     return output
 
 
@@ -61,7 +101,7 @@ def _get_shard_block_overview(block):
 def list_shard_blocks():
     output = ListShardBlockResponse()
     shard_blocks = service.db.session.query(ShardBlockDbObject) \
-        .order_by(desc(ShardBlockDbObject.index)) \
+        .order_by(ShardBlockDbObject.index.desc()) \
         .all()
 
     for block in shard_blocks:
@@ -209,7 +249,7 @@ def get_contract_info(name):
 
 def import_beacon_blocks():
     latest_block_index = service.db.session.query(BeaconBlockDbObject.index) \
-        .order_by(desc(BeaconBlockDbObject.index)) \
+        .order_by(BeaconBlockDbObject.index.desc()) \
         .first()
 
     if latest_block_index is None:

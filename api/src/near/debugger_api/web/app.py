@@ -6,12 +6,12 @@ from schematics.types import BaseType
 from werkzeug.routing import Rule
 from werkzeug.utils import cached_property
 
-from near.block_explorer_api.web.blueprint import blueprint
-from near.block_explorer_api.web.http_errors import (
+from near.debugger_api.web.blueprint import blueprint
+from near.debugger_api.web.http_errors import (
     HTTPError, InvalidField, InvalidInput, JSONDataRequired, MissingFields,
     ResourceNotFound,
 )
-from near.block_explorer_api.web.utils import InputSchema, ListOutputSchema
+from near.debugger_api.web.utils import InputSchema, ListOutputSchema
 
 
 class CustomRule(Rule):
@@ -21,6 +21,7 @@ class CustomRule(Rule):
             input_schema=None,
             output_schema=None,
             errors=None,
+            cached=False,
             **options
     ):
         if input_schema is not None:
@@ -28,6 +29,7 @@ class CustomRule(Rule):
         self.input_schema = input_schema
         self.output_schema = output_schema
         self.errors = errors
+        self.cached = cached
         super(CustomRule, self).__init__(string, **options)
 
 

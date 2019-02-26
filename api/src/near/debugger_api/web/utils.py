@@ -7,7 +7,7 @@ from schematics.types.compound import (
     ModelType,
 )
 
-from near.block_explorer_api.utils.schematics import StrippedStringType
+from near.debugger_api.utils.schematics import StrippedStringType
 
 
 class InputSchemaMeta(ModelMeta):
