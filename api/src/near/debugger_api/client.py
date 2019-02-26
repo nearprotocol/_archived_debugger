@@ -271,19 +271,17 @@ def get_contract_info(name):
     })
 
 
-def import_beacon_blocks():
-    latest_block_index = service.db.session.query(BeaconBlockDbObject.index) \
-        .order_by(BeaconBlockDbObject.index.desc()) \
-        .first()
-
-    if latest_block_index is None:
-        start_index = 0
-    else:
-        start_index = latest_block_index[0] + 1
-
+def _import_beacon_blocks(start_index: int) -> (bool, Optional[int]):
     response = service.nearlib.list_beacon_blocks(start_index)
+    num_blocks = len(response['blocks'])
+    if num_blocks == 0:
+        return False, None
+
+    print("attempting to import {} beacon blocks".format(num_blocks))
+
     transaction_results = {}
     transactions_seen = set([])
+    last_block_index = None
     with service.db.transaction_context():
         for beacon_block in response['blocks']:
             header = beacon_block['body']['header']
@@ -297,6 +295,7 @@ def import_beacon_blocks():
                 index=header['index'],
                 parent_hash=parent_hash,
             )
+            last_block_index = header['index']
             service.db.session.add(beacon_block_db_object)
 
             shard_block_hashes = [header['shard_block_hash']]
@@ -364,3 +363,21 @@ def import_beacon_blocks():
                             body=body,
                         )
                         service.db.session.add(receipt_db_object)
+
+        print("successfully imported {} beacon blocks".format(num_blocks))
+        return True, last_block_index + 1
+
+
+def import_beacon_blocks():
+    latest_block_index = service.db.session.query(BeaconBlockDbObject.index) \
+        .order_by(BeaconBlockDbObject.index.desc()) \
+        .first()
+
+    if latest_block_index is None:
+        start_index = 0
+    else:
+        start_index = latest_block_index[0] + 1
+
+    has_next = True
+    while has_next:
+        has_next, start_index = _import_beacon_blocks(start_index)
