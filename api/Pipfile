@@ -3,8 +3,9 @@ flask = '==1.0.2'
 gevent = '==1.3.7'
 requests = '==2.21.0'
 sqlalchemy = '==1.2.17'
-# test_utils must be installed outside of dev-packages because of https://github.com/pypa/pipenv/issues/2330pynear = {git = "https://github.com/nearprotocol/nearcore.git",ref = "070c6829d211d9132fb5847b4314a46f42136865",subdirectory = "pynear",editable = true, extras=["test_utils"]}
-schematics = {git = 'https://github.com/azban/schematics.git',ref = 'abc09ef84624b4648b5fc7b5f4b64b69d36241c8',editable = true}
+# test_utils must be installed outside of dev-packages because of https://github.com/pypa/pipenv/issues/2330
+pynear = {git = "https://github.com/nearprotocol/nearcore.git",ref = "070c6829d211d9132fb5847b4314a46f42136865",subdirectory = "pynear",editable = true,extras = ["test_utils"]}
+schematics = {git = 'https://github.com/azban/schematics.git',ref = '280bdf7bfe721a5db58cc8e891ba3fcec17b8e07',editable = true}
 
 [dev-packages]
 'delegator.py' = '==0.1.1'
