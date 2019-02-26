@@ -283,6 +283,7 @@ def import_beacon_blocks():
 
     response = service.nearlib.list_beacon_blocks(start_index)
     transaction_results = {}
+    transactions_seen = set([])
     with service.db.transaction_context():
         for beacon_block in response['blocks']:
             header = beacon_block['body']['header']
@@ -317,7 +318,15 @@ def import_beacon_blocks():
                 service.db.session.add(shard_block_db_object)
 
                 for transaction in shard_block['body']['transactions']:
-                    result = service.nearlib.get_transaction_result(transaction['hash'])
+                    # TODO(#35): figure out why transactions appear multiple times
+                    hash_ = transaction['hash']
+                    if hash_ in transactions_seen:
+                        print("transaction {} already entered".format(hash_))
+                        continue
+
+                    transactions_seen.add(hash_)
+
+                    result = service.nearlib.get_transaction_result(hash_)
                     for log in result['result']['logs']:
                         parent_hash = b58.b58encode(log['hash'])
                         for receipt_hash in log['receipts']:
@@ -330,7 +339,7 @@ def import_beacon_blocks():
                             )
 
                     transaction_db_object = TransactionDbObject(
-                        hash=transaction['hash'],
+                        hash=hash_,
                         body=transaction['body'],
                         shard_block=shard_block_db_object,
                     )
