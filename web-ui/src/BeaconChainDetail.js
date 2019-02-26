@@ -29,7 +29,6 @@ export class BlockTable extends React.Component {
     )
     this.setState({ loading: true })
     listBeaconBlocks(paginationOptions).then(response => {
-      console.log(response)
       this.setState({ blocks: response.data, loading: false, numPages: response.num_pages })
     }).catch((error) => {
       this.props.history.push({

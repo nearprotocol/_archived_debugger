@@ -51,8 +51,8 @@ def get_beacon_block_by_index(block_index):
     output_schema=ListShardBlockResponse,
 )
 def list_shard_blocks():
-    # TODO(#20): create api for server side pagination
-    response = client.list_shard_blocks()
+    pagination_options = _get_pagination_options_from_args(request.args)
+    response = client.list_shard_blocks(pagination_options)
     return jsonify(response.to_primitive())
 
 

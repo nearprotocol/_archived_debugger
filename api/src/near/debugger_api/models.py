@@ -118,6 +118,7 @@ class ShardBlock(Model):
 
 class ListShardBlockResponse(Model):
     data = ListType(ModelType(ShardBlockOverview), default=[], required=True)
+    num_pages = IntType(required=True)
 
 
 class BeaconBlock(Model):

@@ -1,5 +1,6 @@
 import base64
 import json
+import math
 from typing import Optional, Type
 
 import requests
@@ -98,15 +99,38 @@ def _get_shard_block_overview(block):
     })
 
 
-def list_shard_blocks():
+def list_shard_blocks(
+        pagination_options: Optional[PaginationOptions] = None
+) -> ListShardBlockResponse:
+    pagination_options = _validate_pagination_options(
+        ShardBlockDbObject,
+        pagination_options,
+    )
+    if len(pagination_options.sort_options) == 0:
+        pagination_options.sort_options = [
+            SortOption({'id': 'index', 'desc': True})
+        ]
+
+    order_by = []
+    for sort_option in pagination_options.sort_options:
+        order = getattr(ShardBlockDbObject, sort_option.id)
+        if sort_option.desc:
+            order = order.desc()
+        order_by.append(order)
+
     output = ListShardBlockResponse()
+    offset = pagination_options.page * pagination_options.page_size
     shard_blocks = service.db.session.query(ShardBlockDbObject) \
-        .order_by(ShardBlockDbObject.index.desc()) \
+        .order_by(*order_by) \
+        .offset(offset) \
+        .limit(pagination_options.page_size) \
         .all()
 
     for block in shard_blocks:
         output.data.append(_get_shard_block_overview(block))
 
+    count = service.db.session.query(ShardBlockDbObject).count()
+    output.num_pages = math.ceil(count / pagination_options.page_size)
     return output
 
 
