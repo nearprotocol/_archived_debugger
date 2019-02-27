@@ -2,7 +2,7 @@ from near.pynear.test_utils.cli import CliHelpers
 # noinspection PyUnresolvedReferences
 from near.pynear.test_utils.fixtures import *
 
-from near.debugger_api import client
+from near.debugger_api import api
 from near.debugger_api.service import service
 
 service.configure()
@@ -15,6 +15,6 @@ def test_import_block_pagination(make_devnet, tmpdir):
         account_id = "test_account.{}".format(i)
         CliHelpers(port).create_account(account_id)
 
-    client.import_beacon_blocks()
-    response = client.list_beacon_blocks()
+    api.import_beacon_blocks()
+    response = api.list_beacon_blocks()
     assert len(response.data) == 3

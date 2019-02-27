@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Index, Integer, String, ForeignKey
+from sqlalchemy import Column, Index, Integer, String, ForeignKey, MetaData
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
-from near.debugger_api.service import DbObject
+metadata = MetaData()
+
+DbObject = declarative_base(metadata=metadata)
 
 
 class BeaconBlockDbObject(DbObject):

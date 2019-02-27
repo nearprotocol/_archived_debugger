@@ -1,13 +1,11 @@
 import json
 
-from flask import Blueprint, jsonify, request
+from flask import current_app, Blueprint, jsonify, request
 
-from near.debugger_api import client
 from near.debugger_api.models import (
     BeaconBlock, ListBeaconBlockResponse, ListShardBlockResponse,
     PaginationOptions, ShardBlock, TransactionInfo,
 )
-from near.debugger_api.service import service
 
 blueprint = Blueprint('api', __name__)
 
@@ -31,7 +29,7 @@ def _get_pagination_options_from_args(args):
 )
 def list_beacon_blocks():
     pagination_options = _get_pagination_options_from_args(request.args)
-    response = client.list_beacon_blocks(pagination_options)
+    response = current_app.api.list_beacon_blocks(pagination_options)
     return jsonify(response.to_primitive())
 
 
@@ -41,7 +39,7 @@ def list_beacon_blocks():
     output_schema=BeaconBlock,
 )
 def get_beacon_block_by_index(block_index):
-    response = client.get_beacon_block_by_index(block_index)
+    response = current_app.api.get_beacon_block_by_index(block_index)
     return jsonify(response.to_primitive())
 
 
@@ -52,7 +50,7 @@ def get_beacon_block_by_index(block_index):
 )
 def list_shard_blocks():
     pagination_options = _get_pagination_options_from_args(request.args)
-    response = client.list_shard_blocks(pagination_options)
+    response = current_app.api.list_shard_blocks(pagination_options)
     return jsonify(response.to_primitive())
 
 
@@ -62,7 +60,7 @@ def list_shard_blocks():
     output_schema=ShardBlock,
 )
 def get_shard_block_by_index(block_index):
-    response = client.get_shard_block_by_index(block_index)
+    response = current_app.api.get_shard_block_by_index(block_index)
     return jsonify(response.to_primitive())
 
 
@@ -72,22 +70,12 @@ def get_shard_block_by_index(block_index):
     output_schema=TransactionInfo,
 )
 def get_transaction_info(transaction_hash):
-    response = client.get_transaction_info(transaction_hash)
+    response = current_app.api.get_transaction_info(transaction_hash)
     return jsonify(response.to_primitive())
 
 
 @blueprint.route('/get-contract-info/<name>', methods=['GET'])
 def get_contract_info(name):
-    response = client.get_contract_info(name)
+    response = current_app.api.get_contract_info(name)
     response.validate()
     return jsonify(response.to_primitive())
-
-
-@blueprint.before_request
-def _import_blocks():
-    try:
-        client.import_beacon_blocks()
-    except Exception as e:
-        print('importing failed.. could be due to simultaneous requests')
-        print(e)
-        service.db.session.remove()

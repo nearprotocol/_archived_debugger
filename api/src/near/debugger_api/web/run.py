@@ -1,19 +1,26 @@
+from gevent.monkey import patch_all
+
+patch_all()
+
 import sys
 import threading
 import time
 
-from near.debugger_api import client
-from near.debugger_api.service import service
+from near.debugger_api.api import DebuggerApi
 from near.debugger_api.web.app import create_app
 
 if __name__ == '__main__':
-    app = create_app(service)
+    app, db_session_getter, db_session_setter = create_app()
+    app.api = DebuggerApi(
+        thread_local_db_session_getter=db_session_getter,
+        thread_local_db_session_setter=db_session_setter,
+    )
 
+    api = DebuggerApi()
+    with api.db.transaction_context():
+        api.db.create_all()
 
-    @app.before_first_request
-    def _init_db():
-        with service.db.transaction_context():
-            service.db.create_all()
+    api.db.session.remove()
 
 
     class BlockImportThread(threading.Thread):
@@ -21,10 +28,11 @@ if __name__ == '__main__':
         def run(cls):
             while True:
                 try:
-                    with app.app_context():
-                        client.import_beacon_blocks()
+                    api.import_beacon_blocks()
                 except Exception as e:
                     print(e, file=sys.stderr)
+                finally:
+                    api.db.session.remove()
 
                 time.sleep(10)
 
@@ -32,4 +40,4 @@ if __name__ == '__main__':
     block_import_thread = BlockImportThread()
     block_import_thread.start()
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)

@@ -84,10 +84,10 @@ def _handle_http_error(error):
     return response
 
 
-def create_app(service):
+def create_app():
     app = CustomFlask(__name__)
 
-    _configure_services(app, service)
+    getter, setter = _get_db_session_setters_and_getters(app)
 
     _enforce_no_cache_headers_for_json(app)
 
@@ -97,7 +97,7 @@ def create_app(service):
     _register_blueprints(app)
     app.register_error_handler(HTTPError, _handle_http_error)
 
-    return app
+    return app, getter, setter
 
 
 def _enforce_request_data_validation(app):
@@ -167,7 +167,7 @@ def _enforce_response_data_validation(app):
     app.after_request(_validate_response_data)
 
 
-def _configure_services(app, service):
+def _get_db_session_setters_and_getters(app):
     def _get_request_db_session():
         return getattr(g, 'db_session', None)
 
@@ -181,7 +181,7 @@ def _configure_services(app, service):
 
     app.after_request(_remove_session)
 
-    service.configure(_get_request_db_session, _set_request_db_session)
+    return _get_request_db_session, _set_request_db_session
 
 
 def _enforce_no_cache_headers_for_json(app):
