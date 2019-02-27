@@ -184,7 +184,11 @@ class DebuggerApi(object):
         }
         return ContractInfo({'state': state})
 
-    def _import_beacon_blocks(self, start_index: int) -> (bool, Optional[int]):
+    def _import_beacon_blocks(
+            self,
+            start_index: int,
+            transactions_seen: set,
+    ) -> (bool, Optional[int]):
         response = self._nearlib.list_beacon_blocks(start_index)
         num_blocks = len(response['blocks'])
         if num_blocks == 0:
@@ -193,7 +197,6 @@ class DebuggerApi(object):
         print("attempting to import {} beacon blocks".format(num_blocks))
 
         transaction_results = {}
-        transactions_seen = set([])
         last_block_index = None
         with self.db.transaction_context():
             for beacon_block in response['blocks']:
@@ -290,9 +293,14 @@ class DebuggerApi(object):
         else:
             start_index = latest_block_index[0] + 1
 
+        hashes = self.db.session.query(TransactionDbObject.hash).all()
+        transactions_seen = set(sum(hashes, ()))
         has_next = True
         while has_next:
-            has_next, start_index = self._import_beacon_blocks(start_index)
+            has_next, start_index = self._import_beacon_blocks(
+                start_index,
+                transactions_seen,
+            )
 
 
 def _validate_pagination_options(
