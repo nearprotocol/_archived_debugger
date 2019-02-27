@@ -25,17 +25,20 @@ from near.debugger_api.utils.sql import Database
 class DebuggerApi(object):
     def __init__(
             self,
-            server_uri: str = 'http://localhost:3030/',
+            server_address: str = 'http://localhost',
+            server_port: int = 3030,
+            db_uri: str = 'sqlite://',
             thread_local_db_session_getter: Callable[[], Session] = None,
             thread_local_db_session_setter: Callable[[Session], None] = None,
     ):
+        server_uri = "{}:{}/".format(server_address, server_port)
         self._nearlib = NearLib(server_uri)
         self.db = Database(
             db_objects.metadata,
             thread_local_db_session_getter,
             thread_local_db_session_setter,
         )
-        self.db.connect('sqlite:////tmp/dinger.db')
+        self.db.connect(db_uri)
 
     def list_beacon_blocks(
             self,

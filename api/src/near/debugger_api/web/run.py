@@ -2,6 +2,7 @@ from gevent.monkey import patch_all
 
 patch_all()
 
+import os
 import sys
 import threading
 import time
@@ -10,6 +11,7 @@ from near.debugger_api.api import DebuggerApi
 from near.debugger_api.web.app import create_app
 
 if __name__ == '__main__':
+    db_uri = os.environ.get('NEAR_DEBUGGER_DB_URI', 'sqlite:////tmp/debugger-api.db')
     app, db_session_getter, db_session_setter = create_app()
     app.api = DebuggerApi(
         thread_local_db_session_getter=db_session_getter,
