@@ -3,7 +3,7 @@ import json
 from flask import current_app, Blueprint, jsonify, request
 
 from near.debugger_api.models import (
-    BeaconBlock, ListBeaconBlockResponse, ListShardBlockResponse,
+    BeaconBlock, ContractInfo, ListBeaconBlockResponse, ListShardBlockResponse,
     PaginationOptions, ShardBlock, TransactionInfo,
 )
 
@@ -74,7 +74,11 @@ def get_transaction_info(transaction_hash):
     return jsonify(response.to_primitive())
 
 
-@blueprint.route('/get-contract-info/<name>', methods=['GET'])
+@blueprint.route(
+    '/get-contract-info/<name>',
+    methods=['GET'],
+    output_schema=ContractInfo,
+)
 def get_contract_info(name):
     response = current_app.api.get_contract_info(name)
     response.validate()
