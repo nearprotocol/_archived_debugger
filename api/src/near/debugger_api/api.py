@@ -199,7 +199,7 @@ class DebuggerApi(object):
 
         if transactions_seen is None:
             hashes = self.db.session.query(TransactionDbObject.hash).all()
-            transactions_seen = set(sum(hashes, ()))
+            transactions_seen = set([r[0] for r in hashes])
 
         print("attempting to import {} beacon blocks".format(num_blocks))
 
