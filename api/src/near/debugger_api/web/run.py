@@ -14,11 +14,12 @@ if __name__ == '__main__':
     db_uri = os.environ.get('NEAR_DEBUGGER_DB_URI', 'sqlite:////tmp/debugger-api.db')
     app, db_session_getter, db_session_setter = create_app()
     app.api = DebuggerApi(
+        db_uri=db_uri,
         thread_local_db_session_getter=db_session_getter,
         thread_local_db_session_setter=db_session_setter,
     )
 
-    api = DebuggerApi()
+    api = DebuggerApi(db_uri=db_uri)
     with api.db.transaction_context():
         api.db.create_all()
 
