@@ -365,7 +365,6 @@ def _decode_transaction_body(body: str) -> (
         })
     elif transaction_type == 'deploy_contract':
         body = DeployContractTransaction({
-            'originator': transaction.deploy_contract.originator,
             'contract_id': transaction.deploy_contract.contract_id,
         })
     elif transaction_type == 'function_call':

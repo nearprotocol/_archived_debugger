@@ -21,3 +21,26 @@ def test_import_block_pagination(make_devnet, tmpdir):
     api.import_beacon_blocks()
     response = api.list_beacon_blocks()
     assert len(response.data) == 3
+
+
+def test_deploy_contract_transaction(make_devnet, tmpdir, tmp_path):
+    port = make_devnet(tmpdir)
+    api = _make_debugger_api(port)
+    contract_name = 'deploy_contract_test'
+
+    wasm_file = tmp_path / 'dummy.wasm'
+    wasm_file.write_bytes(bytearray([]))
+    wasm_path = str(wasm_file.resolve())
+    _, transaction_hash = CliHelpers(port).deploy_contract(
+        contract_name,
+        wasm_path,
+    )
+
+    @retry(stop_max_attempt_number=5, wait_fixed=1000)
+    def _wait_for_transaction():
+        api.import_beacon_blocks()
+        transaction = api.get_transaction_info(transaction_hash)
+        assert transaction is not None
+        return transaction
+
+    _wait_for_transaction()

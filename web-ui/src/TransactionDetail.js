@@ -73,10 +73,6 @@ class Transaction extends React.Component {
           <Table.Cell collapsing>Contract ID</Table.Cell>
           <Table.Cell><Link to={`/contract/${body.contract_id}`}>{body.contract_id}</Link></Table.Cell>
         </Table.Row>
-        <Table.Row>
-          <Table.Cell collapsing>Public Key</Table.Cell>
-          <Table.Cell>{body.public_key}</Table.Cell>
-        </Table.Row>
       </React.Fragment>
     )
   }
