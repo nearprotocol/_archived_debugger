@@ -6,6 +6,7 @@ sqlalchemy = '==1.2.17'
 # test_utils must be installed outside of dev-packages because of https://github.com/pypa/pipenv/issues/2330
 pynear = {git = "https://github.com/nearprotocol/nearcore.git",ref = "3b77076b987fd4d389e2786c4d90cd12cc5a5d44",subdirectory = "pynear",editable = true,extras = ["test_utils"]}
 schematics = {git = 'https://github.com/azban/schematics.git',ref = '280bdf7bfe721a5db58cc8e891ba3fcec17b8e07',editable = true}
+near-debugger-api = {editable = true,path = "."}
 
 [dev-packages]
 'delegator.py' = '==0.1.1'
