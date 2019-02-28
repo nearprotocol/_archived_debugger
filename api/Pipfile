@@ -1,6 +1,7 @@
 [packages]
 flask = '==1.0.2'
 gevent = '==1.3.7'
+gunicorn = "==19.9.0"
 sqlalchemy = '==1.2.17'
 # test_utils must be installed outside of dev-packages because of https://github.com/pypa/pipenv/issues/2330
 pynear = {git = "https://github.com/nearprotocol/nearcore.git",ref = "3b77076b987fd4d389e2786c4d90cd12cc5a5d44",subdirectory = "pynear",editable = true,extras = ["test_utils"]}
