@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import math
 from typing import Callable, Optional, Type, Union
 
@@ -201,7 +202,7 @@ class DebuggerApi(object):
             hashes = self.db.session.query(TransactionDbObject.hash).all()
             transactions_seen = set([r[0] for r in hashes])
 
-        print("attempting to import {} beacon blocks".format(num_blocks))
+        logging.info("attempting to import {} beacon blocks".format(num_blocks))
 
         transaction_results = {}
         last_block_index = None
@@ -243,7 +244,7 @@ class DebuggerApi(object):
                         # TODO(#35): figure out why transactions appear multiple times
                         hash_ = transaction['hash']
                         if hash_ in transactions_seen:
-                            print("transaction {} already entered".format(hash_))
+                            logging.info("transaction {} already entered".format(hash_))
                             continue
 
                         transactions_seen.add(hash_)
@@ -287,7 +288,7 @@ class DebuggerApi(object):
                             )
                             self.db.session.add(receipt_db_object)
 
-            print("successfully imported {} beacon blocks".format(num_blocks))
+            logging.info("successfully imported {} beacon blocks".format(num_blocks))
             return True, last_block_index + 1
 
     def import_beacon_blocks(self):

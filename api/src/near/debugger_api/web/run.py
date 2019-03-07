@@ -2,6 +2,7 @@ from gevent.monkey import patch_all
 
 patch_all()
 
+import logging
 import os
 import sys
 import threading
@@ -32,7 +33,7 @@ class BlockImportThread(threading.Thread):
             try:
                 api.import_beacon_blocks()
             except Exception as e:
-                print(e, file=sys.stderr)
+                logging.exception(str(e), exc_info=sys.exc_info())
             finally:
                 api.db.session.remove()
 

@@ -113,7 +113,7 @@ def _enforce_request_data_validation(app):
 
 
 def _validate_ok_response(response):
-    data = json.loads(response.data)
+    data = json.loads(response.data.decode('utf-8'))
     output_schema = request.url_rule.output_schema
     if output_schema is None:
         raise Exception('output_schema must be specified '

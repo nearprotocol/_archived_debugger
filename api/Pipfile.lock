@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c3b0d45f7682666c0fc2d48cdd5f6e05dc1149b39b198d02f9daef6403fcc5eb"
+            "sha256": "05e582dcdbdd4e87d7c99c6925444f84a3f1481418f052f7f8d0bb91720b0f7c"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -23,10 +23,10 @@
         },
         "attrs": {
             "hashes": [
-                "sha256:10cbf6e27dbce8c30807caf056c8eb50917e0eaafe86347671b57254006c3e69",
-                "sha256:ca4be454458f9dec299268d472aaa5a11f67a4ff70093396e1ceae9c76cf4bbb"
+                "sha256:69c0dbf2ed392de1cb5ec704444b08a5ef81680a61cb899dc08127123af36a79",
+                "sha256:f0b870f674851ecbfbbbd364d6b5cbdff9dcedbc7f3f5e18a6891057f21fe399"
             ],
-            "version": "==18.2.0"
+            "version": "==19.1.0"
         },
         "certifi": {
             "hashes": [
@@ -194,6 +194,10 @@
             "markers": "python_version > '2.7'",
             "version": "==6.0.0"
         },
+        "near-debugger-api": {
+            "editable": true,
+            "path": "."
+        },
         "pexpect": {
             "hashes": [
                 "sha256:2a8e88259839571d1251d278476f3eec5db26deb73a70be5ed5dc5435e418aba",
@@ -249,7 +253,7 @@
                 "test_utils"
             ],
             "git": "https://github.com/nearprotocol/nearcore.git",
-            "ref": "3b77076b987fd4d389e2786c4d90cd12cc5a5d44",
+            "ref": "f3b936e96806c106921d7bdf33ac736fb1a14d07",
             "subdirectory": "pynear"
         },
         "pytest": {
@@ -316,10 +320,10 @@
         },
         "attrs": {
             "hashes": [
-                "sha256:10cbf6e27dbce8c30807caf056c8eb50917e0eaafe86347671b57254006c3e69",
-                "sha256:ca4be454458f9dec299268d472aaa5a11f67a4ff70093396e1ceae9c76cf4bbb"
+                "sha256:69c0dbf2ed392de1cb5ec704444b08a5ef81680a61cb899dc08127123af36a79",
+                "sha256:f0b870f674851ecbfbbbd364d6b5cbdff9dcedbc7f3f5e18a6891057f21fe399"
             ],
-            "version": "==18.2.0"
+            "version": "==19.1.0"
         },
         "delegator.py": {
             "hashes": [
