@@ -208,7 +208,7 @@ class DebuggerApi(object):
         last_block_index = None
         with self.db.transaction_context():
             for beacon_block in response['blocks']:
-                header = beacon_block['body']['header']
+                header = beacon_block['header']
 
                 parent_hash = header['parent_hash']
                 if parent_hash == '11111111111111111111111111111111':
