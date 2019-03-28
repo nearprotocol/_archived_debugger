@@ -7,7 +7,9 @@ Don't forget to run the `nearcore` node first.
 Run backend:
 
     virtualenv .env --python=python3
-    cd block_explorer_api/
+    # Activate .env, e.g. .env/bin/activate
+    
+    cd block-explorer-api/
     python setup.py install
 
     cd src/near/block_explorer_api
