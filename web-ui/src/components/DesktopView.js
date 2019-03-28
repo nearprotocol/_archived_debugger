@@ -15,7 +15,7 @@ import {
    Visibility,
 } from 'semantic-ui-react'
 
-import LogoImage from '../images/explorer-logo.svg'
+import LogoImage from '../images/explorer.png'
 import HomeImage from '../images/icon-home.svg'
 import BlocksImage from '../images/icon-blocks.svg'
 import TransactionsImage from '../images/icon-transactions.svg'
@@ -74,7 +74,7 @@ class DesktopView extends Component {
                      as={Link}
                      to='/'
                      >
-                     <Image src={LogoImage} />
+                     <Image className='mainlogo' src={LogoImage} />
                   </Menu.Item>
                   <Menu.Item
                      name='home'

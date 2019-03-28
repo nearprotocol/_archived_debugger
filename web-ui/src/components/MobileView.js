@@ -15,7 +15,7 @@ import {
    Sidebar,
 } from 'semantic-ui-react'
 
-import LogoImage from '../images/explorer-logo.svg'
+import LogoImage from '../images/explorer.png'
 import HomeImage from '../images/icon-home.svg'
 import BlocksImage from '../images/icon-blocks.svg'
 import TransactionsImage from '../images/icon-transactions.svg'
@@ -141,7 +141,7 @@ class MobileView extends Component {
                      size='large'
                   >
                      <Menu.Item as='a'>
-                        <Image src={LogoImage} />
+                        <Image className='mainlogo' src={LogoImage} />
                      </Menu.Item>
                      <Menu.Menu position='right'>
                         <Menu.Item onClick={this.handleToggle} style={{ paddingRight: '0' }}>

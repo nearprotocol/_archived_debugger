@@ -50,23 +50,23 @@ class DashboardDetail extends Component {
                   <Grid doubling columns={5} textAlign='center' className='dashboard-stats'>
                      <Grid.Row>
                         <Grid.Column>
-                           <h2>1162</h2>
+                           <h2>-</h2>
                            Nodes Online
                         </Grid.Column>
                         <Grid.Column>
-                           <h2>605495</h2>
+                           <h2>-</h2>
                            Block Height
                         </Grid.Column>
                         <Grid.Column>
-                           <h2>27/746</h2>
+                           <h2>-/-</h2>
                            Current/Max TPS
                         </Grid.Column>
                         <Grid.Column>
-                           <h2>24659812</h2>
+                           <h2>-</h2>
                            Transactions Today
                         </Grid.Column>
                         <Grid.Column>
-                           <h2>8246598</h2>
+                           <h2>-</h2>
                            Total Accounts
                         </Grid.Column>
                      </Grid.Row>
