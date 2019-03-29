@@ -54,7 +54,7 @@ class DashboardDetail extends Component {
                            Nodes Online
                         </Grid.Column>
                         <Grid.Column>
-                           <h2>-</h2>
+                           <h2>{blocks.length ? blocks[0].index : '-'}</h2>
                            Block Height
                         </Grid.Column>
                         <Grid.Column>
