@@ -54,7 +54,7 @@ class BlockDetail extends Component {
                      <Grid.Column computer={4} tablet={6} mobile={8} className='border-right'>
                         <Segment className='' basic>
                            <h6>BLOCK HEIGHT</h6>
-                           <h2>?</h2>
+                           <h2>{index}</h2>
                         </Segment>
                      </Grid.Column>
                      <Grid.Column computer={12} tablet={10} mobile={8}>

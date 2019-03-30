@@ -24,6 +24,7 @@ import IssuesImage from '../images/icon-issues.svg'
 import AccountImage from '../images/icon-account.svg'
 import ContactsImage from '../images/icon-contacts.svg'
 import SidebarImage from '../images/sidebar.png'
+import ShardImage from '../images/icon-shard.svg'
 
 
 const getWidth = () => {
@@ -90,7 +91,7 @@ class MobileView extends Component {
                   to='/shard-chain'
                   onClick={this.handleSidebarHide}
                >
-                  <Image className="Navbar-icon" src={TransactionsImage} />
+                  <Image className="Navbar-icon" src={ShardImage} />
                   SHARD CHAIN
                </Menu.Item>
                <Menu.Item

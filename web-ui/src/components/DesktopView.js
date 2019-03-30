@@ -21,7 +21,7 @@ import BlocksImage from '../images/icon-blocks.svg'
 import TransactionsImage from '../images/icon-transactions.svg'
 import HelpImage from '../images/icon-help.svg'
 import IssuesImage from '../images/icon-issues.svg'
-
+import ShardImage from '../images/icon-shard.svg'
 
 const getWidth = () => {
    const isSSR = typeof window === 'undefined'
@@ -104,7 +104,7 @@ class DesktopView extends Component {
                      as={NavLink}
                      to='/shard-chain'
                   >
-                     <Image className="Navbar-icon" src={TransactionsImage} />
+                     <Image className="Navbar-icon" src={ShardImage} />
                      SHARD CHAIN
                   </Menu.Item>
                   <Menu.Menu position='right'>
